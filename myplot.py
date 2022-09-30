@@ -17,6 +17,6 @@ phi_2 = np.load('phi_2.npy')
 fig, ax = plt.subplots(2, 1)
 
 ax[0].plot(x, psi_2)
-ax[1].plot(k, phi_2)
+ax[1].plot(k[:n//2], phi_2[:n//2])
 
 plt.show()

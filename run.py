@@ -40,5 +40,5 @@ def test_psi_normalization():
     assert np.isclose(i, 1.)
 
 def test_phi_normalization():
-    i = np.trapz(phi_2, k)
+    i = np.trapz(phi_2[:n//2], k[:n//2])
     assert np.isclose(i, 1.)
