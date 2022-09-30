@@ -3,14 +3,14 @@ import numpy as np
 from myfunctions import *
 import pytest
 
-# parameters
-le = 50
-n = 1024
+# read parameters from file
+le, n = np.loadtxt('input', usecols=2, unpack=True)
+n = int(n)
 
 # x-space
 x = np.linspace(0, le, n, endpoint=False)
 
-# k-space
+# reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=le/n)
 
 # wave packet
@@ -18,7 +18,8 @@ psi, phi = initial_conditions(x)
 
 # compute squared module
 psi_2 = np.abs(psi) ** 2
-phi_2 = 1 / n * np.abs(phi) ** 2
+f = 1 / 0.4096  # correction factor 
+phi_2 = 1 / (2 * np.pi * n) * np.abs(phi) ** 2 * f
 
 # save in output files
 with open('psi_2.npy', 'wb') as f:
@@ -40,5 +41,5 @@ def test_psi_normalization():
     assert np.isclose(i, 1.)
 
 def test_phi_normalization():
-    i = np.trapz(phi_2[:n//2], k[:n//2])
+    i = np.trapz(phi_2, k)
     assert np.isclose(i, 1.)
