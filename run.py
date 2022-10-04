@@ -13,13 +13,20 @@ x = np.linspace(0, le, n, endpoint=False)
 # reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=le/n)
 
-# wave packet
-psi, phi = initial_conditions(x)
+# read parameters for wave packet
+sigma = 1
+a = 1 / (2 * np.pi * sigma ** 2) ** 0.25    # normalization
+x_0 = 10    # initial position
+k_0 = 10    # initial momentum
+
+# define wave functions
+psi = a * np.exp(1j * k_0 * x - ((x - x_0) / (2 * sigma)) ** 2)
+phi = np.fft.fft(psi)
+
 
 # compute squared module
 psi_2 = np.abs(psi) ** 2
-f = 1 / 0.4096  # correction factor 
-phi_2 = 1 / (2 * np.pi * n) * np.abs(phi) ** 2 * f
+phi_2 = le ** 2 / (2 * np.pi * n ** 2) * np.abs(phi) ** 2
 
 # save in output files
 with open('psi_2.npy', 'wb') as f:
