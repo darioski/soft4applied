@@ -22,7 +22,7 @@ k = 2 * np.pi * np.fft.fftfreq(n, d=1./n)
 sigma = 0.01
 a = 1. / (2 * np.pi * sigma ** 2) ** 0.25    # normalization
 x_0 = 0.1    # initial position
-k_0 = 1000   # initial momentum
+k_0 = 0.   # initial momentum
 
 # define wave functions
 psi = np.zeros((n, m+1), dtype=complex)
@@ -33,7 +33,7 @@ phi[:, 0] = np.fft.fft(psi[:, 0])
 
 # evolve
 for i in range(m):
-    psi[:, i+1], phi[:, i+1] = time_step(psi[:, i], pot, k, dt) 
+    psi[:, i+1], phi[:, i+1] = time_step(psi[:, i], pot, k, dt, n) 
     
 
 # compute squared module

@@ -19,7 +19,7 @@ phi_2 = np.load('phi_2.npy')
 plt.switch_backend('macosx')
 plt.ion()
 
-freq = 10
+freq = 100
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
 for i in range(0, m, freq):
