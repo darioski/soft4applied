@@ -4,9 +4,11 @@ import pickle
 
 # parameters (to be removed)
 
-n, m = np.loadtxt('input', usecols=2, unpack=True)
-n = int(n)
-m = int(m)
+# read parameters from file
+t = np.loadtxt('input', usecols=2)
+n = 1024
+dt = 1e-7
+m = int(1e7 * t)
 
 # spaces (to be removed)
 x = np.linspace(0., 1., n, endpoint=False)
@@ -29,14 +31,12 @@ phi_2 = data['phi_2']
 plt.switch_backend('macosx')
 plt.ion()
 
-freq = 1
+freq = 10
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
 for j in range(0, m, freq):
     ax1.clear()
     ax2.clear()
-    
-    ax1.set_ylim(0, 1)
 
     ax1.plot(x, psi_2[:, j], x, pot)
     ax2.plot(k, phi_2[:, j])

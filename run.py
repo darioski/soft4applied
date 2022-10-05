@@ -6,10 +6,10 @@ from myfunctions import *
 
 
 # read parameters from file
-n, m = np.loadtxt('input', usecols=2, unpack=True)
-n = int(n)
-m = int(m)
-dt = 1e-3 / m
+t = np.loadtxt('input', usecols=2)
+n = 1024
+dt = 1e-7
+m = int(1e7 * t)
 
 # x-space
 x = np.linspace(0., 1., n, endpoint=False)
@@ -24,7 +24,7 @@ k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 sigma = 0.01
 a = 1. / (2 * np.pi * sigma ** 2) ** 0.25    # normalization
 x_0 = 0.1    # initial position
-k_0 = 1000  # initial momentum
+k_0 = 2000  # initial momentum
 
 # define wave functions
 psi = np.zeros((n, m+1), dtype=complex)
@@ -51,6 +51,10 @@ data = {'psi':psi, 'phi':phi, 'psi_2':psi_2, 'phi_2':phi_2}
 with open('data.pickle', 'wb') as datafile:
     pickle.dump(data, datafile, pickle.HIGHEST_PROTOCOL)
 
+# check norm
+print(np.trapz(psi_2[:, 0], x))
+print(np.trapz(psi_2[:, -1], x))
+
 
 # --------- tests ----------
 
@@ -68,4 +72,4 @@ def test_phi_normalization():
 def test_norm_conserved():
     i_start = np.trapz(psi_2[:, 0], x)
     i_end =  np.trapz(psi_2[:, -1], x)
-    assert np.isclose(i_start, i_end, atol=1e-5)
+    assert np.isclose(i_start, i_end)
