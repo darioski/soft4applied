@@ -1,4 +1,4 @@
 # input parameters
 
-n = 256
-m = 2560
+n = 1024
+m = 10

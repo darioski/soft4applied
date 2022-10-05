@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 
 # parameters (to be removed)
 
@@ -11,23 +12,34 @@ m = int(m)
 x = np.linspace(0., 1., n, endpoint=False)
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 
+# pot
+pot = np.zeros(n)
+
 # load data
-psi_2 = np.load('psi_2.npy')
-phi_2 = np.load('phi_2.npy')
+with open('data.pickle', 'rb') as datafile:
+    data = pickle.load(datafile)
+
+psi = data['psi']
+phi = data['phi']
+psi_2 = data['psi_2']
+phi_2 = data['phi_2']
+
 
 # plot
 plt.switch_backend('macosx')
 plt.ion()
 
-freq = 100
+freq = 1
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
-for i in range(0, m, freq):
+for j in range(0, m, freq):
     ax1.clear()
     ax2.clear()
     
-    ax1.plot(x, psi_2[:, i])
-    ax2.plot(k, phi_2[:, i])
+    ax1.set_ylim(0, 1)
+
+    ax1.plot(x, psi_2[:, j], x, pot)
+    ax2.plot(k, phi_2[:, j])
     
     plt.pause(0.01)
     
