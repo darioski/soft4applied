@@ -2,15 +2,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 
-# parameters (to be removed)
 
 # read parameters from file
-t = np.loadtxt('input', usecols=2)
+t = np.loadtxt('input', usecols=2, max_rows=1)
 n = 1024
 dt = 1e-7
 m = int(1e7 * t)
 
-# spaces (to be removed)
+# spaces
 x = np.linspace(0., 1., n, endpoint=False)
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 
@@ -32,17 +31,15 @@ plt.switch_backend('macosx')
 plt.ion()
 
 freq = 10
-fig, (ax1, ax2) = plt.subplots(2, 1)
+fig, ax = plt.subplots()
 
 for j in range(0, m, freq):
-    ax1.clear()
-    ax2.clear()
+    ax.clear()
 
-    ax1.plot(x, psi_2[:, j], x, pot)
-    ax2.plot(k, phi_2[:, j])
+    ax.plot(x, psi_2[:, j])
+    ax.plot(x, pot)
     
     plt.pause(0.01)
-    
 
 plt.ioff()
 plt.show()
