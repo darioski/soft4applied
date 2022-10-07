@@ -22,5 +22,17 @@ def timestep(psi, pot, k, dt):
     return psi, phi
 
 
+def potential_barrier(x, a, h):
+    
+    n = len(x)
+    pot = np.zeros(n)
+    for i, pos in enumerate(x):
+        if 0.5 - a < pos < 0.5 + a:
+            pot[i] = h
+    return pot
+
+
+
+
 # ----------- tests ------------
 

@@ -1,12 +1,12 @@
 import numpy as np
 import pickle
 import pytest
-from myfunctions import timestep
+from myfunctions import timestep, potential_barrier
 
 
 
 # read parameters from file
-t, sigma, x_0, k_0 = np.loadtxt('input', usecols=2, unpack=True)
+t, sigma, x_0, k_0, a, h = np.loadtxt('input', usecols=2, unpack=True)
 n = 1024
 dt = 1e-7
 m = int(1e7 * t)
@@ -15,7 +15,7 @@ m = int(1e7 * t)
 x = np.linspace(0., 1., n, endpoint=False)
 
 # potential
-pot = np.zeros(n)
+pot = potential_barrier(x, a, h)
 
 # reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
@@ -43,7 +43,7 @@ for j in range(m+1):
     phi_2[:, j] = 1 / (2 * np.pi * n ** 2) * np.abs(phi[:, j]) ** 2
 
 # save in output file
-data = {'psi':psi, 'phi':phi, 'psi_2':psi_2, 'phi_2':phi_2}
+data = {'pot': pot, 'psi':psi, 'phi':phi, 'psi_2':psi_2, 'phi_2':phi_2}
 with open('data.pickle', 'wb') as datafile:
     pickle.dump(data, datafile, pickle.HIGHEST_PROTOCOL)
 
@@ -51,7 +51,7 @@ with open('data.pickle', 'wb') as datafile:
 # --------- tests ----------
 
 def test_length():
-    assert len(psi) == n
+    assert len(psi) == len(x)
 
 def test_psi_normalization():
     i = np.trapz(psi_2[:, 0], x)
