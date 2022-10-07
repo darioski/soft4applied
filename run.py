@@ -1,12 +1,13 @@
+from statistics import harmonic_mean
 import numpy as np
 import pickle
 import pytest
-from myfunctions import timestep, potential_barrier
+from myfunctions import timestep, potential_barrier, harmonic_potential
 
 
 
 # read parameters from file
-t, sigma, x_0, k_0, a, h = np.loadtxt('input', usecols=2, unpack=True)
+t, sigma, x_0, k_0, b, h, a= np.loadtxt('input', usecols=2, unpack=True)
 n = 1024
 dt = 1e-7
 m = int(1e7 * t)
@@ -15,7 +16,7 @@ m = int(1e7 * t)
 x = np.linspace(0., 1., n, endpoint=False)
 
 # potential
-pot = potential_barrier(x, a, h)
+pot = harmonic_potential(x, a)
 
 # reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
@@ -46,6 +47,13 @@ for j in range(m+1):
 data = {'pot': pot, 'psi':psi, 'phi':phi, 'psi_2':psi_2, 'phi_2':phi_2}
 with open('data.pickle', 'wb') as datafile:
     pickle.dump(data, datafile, pickle.HIGHEST_PROTOCOL)
+
+
+# probability analysis
+print(np.trapz(psi_2[:, 0], x))
+print(np.trapz(psi_2[:, -1], x))
+print(np.trapz(psi_2[:n//2, -1], x[:n//2]))     # integral on left side
+print(np.trapz(psi_2[n//2:, -1], x[n//2:]))     # integral on right side
 
 
 # --------- tests ----------

@@ -4,7 +4,7 @@ import pickle
 
 
 # read parameters from file
-t, sigma, x_0, k_0, a, h = np.loadtxt('input', usecols=2, unpack=True)
+t, sigma, x_0, k_0, b, h, a = np.loadtxt('input', usecols=2, unpack=True)
 n = 1024
 dt = 1e-7
 m = int(1e7 * t)
@@ -38,7 +38,7 @@ for j in range(0, m, freq):
     ax.set_ylim(-1, 1.2 * 1 / np.sqrt(2 * np.pi * sigma ** 2))
 
     ax.plot(x, psi_2[:, j])
-    ax.plot(x, pot)
+    ax.plot(x, 100 * pot / a)
     
     plt.pause(0.01)
 

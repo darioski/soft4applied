@@ -1,17 +1,21 @@
 # simulation parameters
 
-t = 5e-4    # simulation time
+t = 1e-3    # simulation time
 
 # gaussian parameters
 
 sigma = 0.01    # std
-x_0 = 0.3       # starting position 
+x_0 = 0.3      # starting position 
 k_0 = 2e3      # initial momentum
 
 # potential parameters
 
 # potential barrier / well
 
-a = 0.1    # half width
+b = 0.01    # half width
 h = -2e6    # height
+
+# harmonic potential 
+
+a = 5e7    # aperture
 

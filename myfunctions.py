@@ -22,15 +22,18 @@ def timestep(psi, pot, k, dt):
     return psi, phi
 
 
-def potential_barrier(x, a, h):
-    
+def potential_barrier(x, b, h):
+
     n = len(x)
     pot = np.zeros(n)
     for i, pos in enumerate(x):
-        if 0.5 - a < pos < 0.5 + a:
+        if 0.5 - b < pos < 0.5 + b:
             pot[i] = h
     return pot
 
+
+def harmonic_potential(x, a):
+    return a * (x - 0.5) ** 2
 
 
 
