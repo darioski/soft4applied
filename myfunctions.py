@@ -36,6 +36,5 @@ def harmonic_potential(x, a):
     return a * (x - 0.5) ** 2
 
 
-
 # ----------- tests ------------
 
