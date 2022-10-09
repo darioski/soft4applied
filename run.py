@@ -3,6 +3,9 @@ import pickle
 import pytest
 import myfunctions as mf
 import params
+import time
+
+start_time = time.time()
 
 
 # set parameters
@@ -60,6 +63,8 @@ print(np.trapz(psi_2[:, 0], x))
 print(np.trapz(psi_2[:, -1], x))
 print(np.trapz(psi_2[:n//2, -1], x[:n//2]))     # integral on left side
 print(np.trapz(psi_2[n//2:, -1], x[n//2:]))     # integral on right side
+
+print("Runtime = {:5.3f} s".format(time.time() - start_time))
 
 
 # --------- tests ----------
