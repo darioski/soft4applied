@@ -40,6 +40,8 @@ for j in range(0, m, freq):
 
     ax.plot(x, psi_2[:, j])
     ax.plot(x, pot)
+
+    ax.text(0.8, 1.01, 't = {:2.2e}'.format(1e-7 * j), transform=ax.transAxes)
     
     plt.pause(0.01)
 
