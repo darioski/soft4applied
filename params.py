@@ -1,7 +1,7 @@
 #----------------------
 # simulation parameters
 
-t = 1e-4   # simulation time
+t = 5e-4   # simulation time
 
 #----------------------
 # gaussian parameters

@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 import pytest
-from myfunctions import timestep, potential_barrier, harmonic_potential
+import myfunctions as mf
 import params
 
 
@@ -22,10 +22,10 @@ if params.potential == 'flat':
     pot = np.zeros(n)
 
 if params.potential == 'barrier':
-    pot = potential_barrier(x, params.b, params.h)
+    pot = mf.potential_barrier(x, params.b, params.h)
 
 if params.potential == 'harmonic':
-    pot = harmonic_potential(x, params.a)
+    pot = mf.harmonic_potential(x, params.a)
 
 
 # define wave functions
@@ -38,7 +38,7 @@ phi[:, 0] = np.fft.fft(psi[:, 0])
 
 # evolve
 for j in range(m):
-    psi[:, j+1], phi[:, j+1] = timestep(psi[:, j], pot, k, dt) 
+    psi[:, j+1], phi[:, j+1] = mf.timestep(psi[:, j], pot, k, dt) 
 
 
 # compute squared module
