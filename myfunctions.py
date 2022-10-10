@@ -1,10 +1,23 @@
 import numpy as np
-import pytest
 
 
-def gaussian(x, a, b, sigma):
-    return a * np.exp(- 0.5 * (x - b) ** 2 / sigma ** 2)
+def gaussian(x, x_0, sigma):
+    return 1 / np.sqrt(2 * np.pi * sigma ** 2) * np.exp(-0.5 * (x - x_0) ** 2 / sigma ** 2)
 
+
+def check_simulation_time(t, dt):
+    if t < dt:
+        raise ValueError("Input parameter \"t\" is too small. Choose \"t\" bigger than {:1.1e}".format(dt))
+
+
+def check_start_condition(x_0, dx, sigma):
+    if not 0. < x_0 < 1.:
+        raise ValueError("Input parameter \"x_0\" is out of range (0, 1).")
+    if sigma < 3 * dx:
+        raise ValueError("Chosen \"sigma\" is too small.")
+    if x_0 < 6 * sigma or 1 - x_0 < 6 * sigma:
+        raise ValueError("Wave-packet is too close to the edge. Choose a different \"x_0\" or a smaller \"sigma\".")
+    
 
 def potential_operator(psi, pot, dt):
     return psi * np.exp(-0.5j * dt * pot)
@@ -38,7 +51,4 @@ def potential_barrier(x, b, h):
 
 def harmonic_potential(x, a):
     return a * (x - 0.5) ** 2
-
-
-# ----------- tests ------------
 

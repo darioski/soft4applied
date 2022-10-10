@@ -36,7 +36,7 @@ fig, ax = plt.subplots()
 
 for j in range(0, m, freq):
     ax.clear()
-    ax.set_ylim(-1, y_lim)
+    ax.set_ylim(-0.01*y_lim, y_lim)
 
     ax.plot(x, psi_2[:, j])
     ax.plot(x, pot)

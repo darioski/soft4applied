@@ -1,6 +1,5 @@
 import numpy as np
 import pickle
-import pytest
 import myfunctions as mf
 import params
 import time
@@ -10,9 +9,10 @@ from scipy.optimize import curve_fit
 start_time = time.time()
 
 # set parameters
-n = 1024
 dt = 1e-7
+mf.check_simulation_time(params.t, dt)
 m = int(1e7 * params.t)
+n = 1024
 
 # reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
@@ -20,6 +20,7 @@ k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 # boundary conditions
 if params.boundary == 'periodic':
     x = np.linspace(0., 1., n, endpoint=False)
+    dx = x[1]
 
 # choose potential
 if params.potential == 'flat':
@@ -32,6 +33,8 @@ if params.potential == 'harmonic':
     pot = mf.harmonic_potential(x, params.a)
 
 
+mf.check_start_condition(params.x_0, dx, params.sigma)
+
 # define wave functions
 psi = np.zeros((n, m+1), dtype=complex)
 phi = np.zeros((n, m+1), dtype=complex)
@@ -39,6 +42,8 @@ phi = np.zeros((n, m+1), dtype=complex)
 norm = 1. / (2 * np.pi * params.sigma ** 2) ** 0.25    # normalization
 psi[:, 0] = norm * np.exp(1j * params.k_0 * x - ((x - params.x_0) / (2 * params.sigma)) ** 2)
 phi[:, 0] = np.fft.fft(psi[:, 0])
+
+
 
 print("System evolving...  this may take a while...")
 
@@ -72,7 +77,7 @@ end_load = time.time()
 if params.potential == 'flat':
 
     x_f = np.average(x, weights=psi_2[:, -1])       # final position
-    popt, pcov = curve_fit(mf.gaussian, x, psi_2[:, -1], p0=[norm ** 2, x_f, params.sigma])
+    popt, pcov = curve_fit(mf.gaussian, x, psi_2[:, -1], p0=[x_f, params.sigma])
     E_f = 0.5 * np.average(k, weights=phi_2[:, -1]) ** 2
 
     with open('analysis.out', 'w') as f:
@@ -85,30 +90,10 @@ if params.potential == 'flat':
         f.write('E_mean = {:2.3e}\n'.format(0.5 * params.k_0 ** 2))
         f.write('End:\n')
         f.write('x_mean = {:1.3f}\n'.format(x_f))
-        f.write('std = {:1.3f}\n'.format(popt[2]))
+        f.write('std = {:1.3f}\n'.format(popt[1]))
         f.write('E_mean = {:2.3e}\n'.format(E_f))
 
 
 print("Runtime = {:5.3f} s".format(end_run - start_time))
 print("Data saving time = {:5.3f} s".format(end_load - end_run))
 print("Total runtime = {:5.3f} s".format(end_load - start_time))
-
-
-
-# --------- tests ----------
-
-def test_length():
-    assert len(psi) == len(x)
-
-def test_psi_normalization():
-    i = np.trapz(psi_2[:, 0], x)
-    assert np.isclose(i, 1.)
-
-def test_phi_normalization():
-    i = np.trapz(phi_2[:, 0], k)
-    assert np.isclose(i, 1.)
-
-def test_norm_conserved():
-    i_start = np.trapz(psi_2[:, 0], x)
-    i_end =  np.trapz(psi_2[:, -1], x)
-    assert np.isclose(i_start, i_end)
