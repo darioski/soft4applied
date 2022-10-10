@@ -20,13 +20,13 @@ phi_2 = data['phi_2']
 # plotting parameters
 m = int(1e7 * params.t)
 freq = int(params.freq)
-y_lim = np.max(psi_2)
+y_lim = 1.05 * np.max(psi_2)
 
 if params.potential == 'harmonic':
     pot *= 2 * y_lim / params.a
 
 if params.potential == 'barrier':
-    pot *= 0.9 * y_lim / np.abs(params.h)
+    pot *= 0.95 * y_lim / np.abs(params.h)
 
 
 plt.switch_backend('macosx')

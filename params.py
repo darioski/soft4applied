@@ -1,7 +1,7 @@
 #----------------------
 # simulation parameters
 
-t = 5e-4   # simulation time
+t = 4e-4  # simulation time
 
 #----------------------
 # gaussian parameters
@@ -19,7 +19,7 @@ boundary = 'periodic'
 
 # 'flat', 'barrier', 'harmonic'
 
-potential = 'harmonic'
+potential = 'flat'
 
 # potential barrier / well
 

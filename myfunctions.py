@@ -2,6 +2,10 @@ import numpy as np
 import pytest
 
 
+def gaussian(x, a, b, sigma):
+    return a * np.exp(- 0.5 * (x - b) ** 2 / sigma ** 2)
+
+
 def potential_operator(psi, pot, dt):
     return psi * np.exp(-0.5j * dt * pot)
 

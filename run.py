@@ -4,9 +4,10 @@ import pytest
 import myfunctions as mf
 import params
 import time
+from scipy.optimize import curve_fit
+
 
 start_time = time.time()
-
 
 # set parameters
 n = 1024
@@ -39,6 +40,8 @@ norm = 1. / (2 * np.pi * params.sigma ** 2) ** 0.25    # normalization
 psi[:, 0] = norm * np.exp(1j * params.k_0 * x - ((x - params.x_0) / (2 * params.sigma)) ** 2)
 phi[:, 0] = np.fft.fft(psi[:, 0])
 
+print("System evolving...  this may take a while...")
+
 # evolve
 for j in range(m):
     psi[:, j+1], phi[:, j+1] = mf.timestep(psi[:, j], pot, k, dt) 
@@ -52,19 +55,44 @@ for j in range(m+1):
     psi_2[:, j] = np.abs(psi[:, j]) ** 2
     phi_2[:, j] = 1 / (2 * np.pi * n ** 2) * np.abs(phi[:, j]) ** 2
 
+end_run = time.time()
+
+
+print("Almost done! Saving data... please wait")
+
 # save in output file
 data = {'x':x, 'k':k, 'pot':pot, 'psi':psi, 'phi':phi, 'psi_2':psi_2, 'phi_2':phi_2}
 with open('data.pickle', 'wb') as datafile:
     pickle.dump(data, datafile, pickle.HIGHEST_PROTOCOL)
 
+end_load = time.time()
 
-# probability analysis
-print(np.trapz(psi_2[:, 0], x))
-print(np.trapz(psi_2[:, -1], x))
-print(np.trapz(psi_2[:n//2, -1], x[:n//2]))     # integral on left side
-print(np.trapz(psi_2[n//2:, -1], x[n//2:]))     # integral on right side
 
-print("Runtime = {:5.3f} s".format(time.time() - start_time))
+# analysis file
+if params.potential == 'flat':
+
+    x_f = np.average(x, weights=psi_2[:, -1])       # final position
+    popt, pcov = curve_fit(mf.gaussian, x, psi_2[:, -1], p0=[norm ** 2, x_f, params.sigma])
+    E_f = 0.5 * np.average(k, weights=phi_2[:, -1]) ** 2
+
+    with open('analysis.out', 'w') as f:
+        f.write(str(np.trapz(psi_2[:, 0], x)) + '\n')
+        f.write(str(np.trapz(psi_2[:, -1], x)) + '\n')
+        f.write('Potential = flat\n')
+        f.write('Start:\n')
+        f.write('x_mean = {:1.3f}\n'.format(params.x_0))
+        f.write('std = {:1.3f}\n'.format(params.sigma))
+        f.write('E_mean = {:2.3e}\n'.format(0.5 * params.k_0 ** 2))
+        f.write('End:\n')
+        f.write('x_mean = {:1.3f}\n'.format(x_f))
+        f.write('std = {:1.3f}\n'.format(popt[2]))
+        f.write('E_mean = {:2.3e}\n'.format(E_f))
+
+
+print("Runtime = {:5.3f} s".format(end_run - start_time))
+print("Data saving time = {:5.3f} s".format(end_load - end_run))
+print("Total runtime = {:5.3f} s".format(end_load - start_time))
+
 
 
 # --------- tests ----------
