@@ -1,19 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import pickle
 import params
 
 # load data
-with open('data.pickle', 'rb') as datafile:
-    data = pickle.load(datafile)
-
-x = data['x']
-k = data['k']
-pot = data['pot']
-psi = data['psi']
-phi = data['phi']
-psi_2 = data['psi_2']
-phi_2 = data['phi_2']
+with open('x.npy', 'rb') as f:
+    x = np.load(f)
+with open('pot.npy', 'rb') as f:
+    pot = np.load(f)
+with open('psi_2.npy', 'rb') as f:
+    psi_2 = np.load(f)
 
 
 # plot

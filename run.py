@@ -1,5 +1,4 @@
 import numpy as np
-import pickle
 import myfunctions as mf
 import params
 import time
@@ -65,10 +64,15 @@ end_run = time.time()
 
 print("Almost done! Saving data... please wait")
 
-# save in output file
-data = {'x':x, 'k':k, 'pot':pot, 'psi':psi, 'phi':phi, 'psi_2':psi_2, 'phi_2':phi_2}
-with open('data.pickle', 'wb') as datafile:
-    pickle.dump(data, datafile, pickle.HIGHEST_PROTOCOL)
+# save in output files
+with open('x.npy', 'wb') as f:
+    np.save(f, x)
+
+with open('pot.npy', 'wb') as f:
+    np.save(f, pot)
+
+with open('psi_2.npy', 'wb') as f:
+    np.save(f, psi_2)
 
 end_load = time.time()
 
