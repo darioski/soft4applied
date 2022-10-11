@@ -17,18 +17,22 @@ boundary = 'periodic'
 #-----------------------
 # potential parameters
 
-# 'flat', 'barrier', 'harmonic'
+# 'flat', 'barrier', 'harmonic', 'delta'
 
-potential = 'flat'
+potential = 'delta'
 
 # potential barrier / well
 
-b = 0.001    # half width
+b = 0.1   # half width
 h = 1e7    # height
 
 # harmonic potential 
 
 a = 5e7    # aperture
+
+# delta potential
+
+alpha = 1e7     # height
 
 # ----------------------
 # plotting parameters

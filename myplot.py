@@ -23,6 +23,9 @@ if params.potential == 'harmonic':
 if params.potential == 'barrier':
     pot *= 0.95 * y_lim / np.abs(params.h)
 
+if params.potential == 'delta':
+    pot *= 0.95 * y_lim / np.abs(params.alpha)
+
 
 plt.switch_backend('macosx')
 plt.ion()

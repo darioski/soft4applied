@@ -18,17 +18,17 @@ n = 1024
 # reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 
-
-
 # boundary conditions
-mf.check_boundary(params.boundary)
+boundary_list = ['periodic']
+mf.check_boundary(params.boundary, boundary_list)
 
 if params.boundary == 'periodic':
     x = np.linspace(0., 1., n, endpoint=False)
     dx = x[1]
 
 # check potential
-mf.check_potential(params.potential)
+potential_list = ['flat', 'barrier', 'harmonic', 'delta']
+mf.check_potential(params.potential, potential_list)
 
 # choose potential
 if params.potential == 'flat':
@@ -39,6 +39,9 @@ if params.potential == 'barrier':
 
 if params.potential == 'harmonic':
     pot = mf.harmonic_potential(x, params.a)
+
+if params.potential == 'delta':
+    pot = mf.barrier_potential(x, dx, params.alpha)
 
 
 # check start position
