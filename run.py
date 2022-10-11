@@ -1,4 +1,5 @@
 import numpy as np
+from pytest import param
 import myfunctions as mf
 import params
 import time
@@ -9,30 +10,41 @@ start_time = time.time()
 
 # set parameters
 dt = 1e-7
-mf.check_simulation_time(params.t, dt)
+mf.check_time_length(params.t, dt)
+
 m = int(1e7 * params.t)
 n = 1024
 
 # reciprocal space
 k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 
+
+
 # boundary conditions
+mf.check_boundary(params.boundary)
+
 if params.boundary == 'periodic':
     x = np.linspace(0., 1., n, endpoint=False)
     dx = x[1]
+
+# check potential
+mf.check_potential(params.potential)
 
 # choose potential
 if params.potential == 'flat':
     pot = np.zeros(n)
 
 if params.potential == 'barrier':
-    pot = mf.potential_barrier(x, params.b, params.h)
+    pot = mf.barrier_potential(x, params.b, params.h)
 
 if params.potential == 'harmonic':
     pot = mf.harmonic_potential(x, params.a)
 
 
-mf.check_start_condition(params.x_0, dx, params.sigma)
+# check start position
+mf.is_in_range(params.x_0)
+mf.is_wide_enough(params.sigma, dx)
+mf.is_centered(params.x_0, params.sigma)
 
 # define wave functions
 psi = np.zeros((n, m+1), dtype=complex)
@@ -42,25 +54,19 @@ norm = 1. / (2 * np.pi * params.sigma ** 2) ** 0.25    # normalization
 psi[:, 0] = norm * np.exp(1j * params.k_0 * x - ((x - params.x_0) / (2 * params.sigma)) ** 2)
 phi[:, 0] = np.fft.fft(psi[:, 0])
 
-
-
 print("System evolving...  this may take a while...")
 
 # evolve
 for j in range(m):
-    psi[:, j+1], phi[:, j+1] = mf.timestep(psi[:, j], pot, k, dt) 
+    psi[:, j+1] = mf.timestep(psi[:, j], pot, k, dt) 
+    phi[:, j+1] = np.fft.fft(psi[:, j+1])
 
 
 # compute squared module
-psi_2 = np.zeros((n, m+1))
-phi_2 = np.zeros((n, m+1))
-
-for j in range(m+1):
-    psi_2[:, j] = np.abs(psi[:, j]) ** 2
-    phi_2[:, j] = 1 / (2 * np.pi * n ** 2) * np.abs(phi[:, j]) ** 2
+psi_2 = np.abs(psi) ** 2
+phi_2 = 1 / (2 * np.pi * n ** 2) * np.abs(phi) ** 2
 
 end_run = time.time()
-
 
 print("Almost done! Saving data... please wait")
 
@@ -75,7 +81,6 @@ with open('psi_2.npy', 'wb') as f:
     np.save(f, psi_2)
 
 end_load = time.time()
-
 
 # analysis file
 if params.potential == 'flat':
