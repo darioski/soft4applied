@@ -128,7 +128,3 @@ def test_gaussian_norm():
     x = np.linspace(0., 1., 1024, endpoint=False)
     i = np.trapz(mf.gaussian(x, 0.5, 0.01), x)
     assert np.isclose(i, 1.)
-
-
-
-

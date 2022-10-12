@@ -1,5 +1,4 @@
 import numpy as np
-from pytest import param
 import myfunctions as mf
 import params
 import time
@@ -83,7 +82,7 @@ with open('pot.npy', 'wb') as f:
 with open('psi_2.npy', 'wb') as f:
     np.save(f, psi_2)
 
-end_load = time.time()
+end_save = time.time()
 
 # analysis file
 if params.potential == 'flat':
@@ -107,5 +106,5 @@ if params.potential == 'flat':
 
 
 print("Runtime = {:5.3f} s".format(end_run - start_time))
-print("Data saving time = {:5.3f} s".format(end_load - end_run))
-print("Total runtime = {:5.3f} s".format(end_load - start_time))
+print("Data saving time = {:5.3f} s".format(end_save - end_run))
+print("Total runtime = {:5.3f} s".format(end_save - start_time))
