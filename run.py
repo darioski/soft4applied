@@ -105,6 +105,6 @@ if params.potential == 'flat':
         f.write('E_mean = {:2.3e}\n'.format(E_f))
 
 
-print("Runtime = {:5.3f} s".format(end_run - start_time))
+print("Algorithm runtime = {:5.3f} s".format(end_run - start_time))
 print("Data saving time = {:5.3f} s".format(end_save - end_run))
 print("Total runtime = {:5.3f} s".format(end_save - start_time))

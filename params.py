@@ -1,7 +1,7 @@
 #----------------------
 # simulation parameters
 
-t = 0.0001  # simulation time
+t = 1e-4 # simulation time
 
 #----------------------
 # gaussian parameters
@@ -37,7 +37,11 @@ alpha = 1e6    # height
 # ----------------------
 # plotting parameters
 
-freq = 10
+# 'gif', 'html', 'mp4'
+file_format = 'html'  # file format
+
+play_speed = 3   # animation speed multiplier
+
 
 
 
