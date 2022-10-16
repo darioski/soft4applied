@@ -2,7 +2,6 @@ import numpy as np
 import myfunctions as mf
 import params
 import time
-from scipy.optimize import curve_fit
 
 
 def main():
@@ -16,16 +15,12 @@ def main():
 	m = int(1e7 * params.t)
 	n = 1024
 
+	# 
+	x = np.linspace(0., 1., n, endpoint=False)
+	dx = x[1] - x[0]
+
 	# reciprocal space
-	k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
-
-	# boundary conditions
-	boundary_list = ['periodic']
-	mf.check_boundary(params.boundary, boundary_list)
-
-	if params.boundary == 'periodic':
-		x = np.linspace(0., 1., n, endpoint=False)
-		dx = x[1]
+	k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
 
 	# check potential
 	potential_list = ['flat', 'barrier', 'harmonic', 'delta']
@@ -44,7 +39,11 @@ def main():
 	if params.potential == 'delta':
 		pot = mf.barrier_potential(x, dx, params.alpha)
 
-
+	
+	# boundary conditions
+	boundary_list = ['periodic']
+	mf.check_boundary(params.boundary, boundary_list)
+	
 	# check start position
 	mf.is_in_range(params.x_0)
 	mf.is_wide_enough(params.sigma, dx)
@@ -53,8 +52,8 @@ def main():
 	mf.check_initial_momentum(n, params.sigma, params.k_0)
 
 	# define wave functions
-	psi = np.zeros((n, m+1), dtype=complex)
-	phi = np.zeros((n, m+1), dtype=complex)
+	psi = np.empty((n, m+1), dtype=complex)
+	phi = np.empty((n, m+1), dtype=complex)
 
 	# set initial state
 	psi[:, 0] = mf.initial_state(x, params.x_0, params.sigma, params.k_0)
@@ -67,55 +66,40 @@ def main():
 		psi[:, j+1] = mf.timestep(psi[:, j], pot, k, dt) 
 		phi[:, j+1] = np.fft.fft(psi[:, j+1])
 
-
 	# compute squared module
 	psi_2 = np.abs(psi) ** 2
 	phi_2 = 1 / (2 * np.pi * n ** 2) * np.abs(phi) ** 2
+
+	# compute statistics
+	x_mean = np.empty(m+1)
+	x_rms = np.empty(m+1)
+	for j in range(m+1):
+		x_mean[j] = np.mean(x * psi_2[:, j])
+		x_rms[j] = mf.rms_x(x, psi_2[:, j], x_mean[j])
 
 	end_run = time.time()
 
 	print("Almost done! Saving data... please wait")
 
 	# save in output files
-	with open('x.npy', 'wb') as f:
-		np.save(f, x)
 	with open('pot.npy', 'wb') as f:
 		np.save(f, pot)
 	with open('psi_2.npy', 'wb') as f:
 		np.save(f, psi_2)
+	with open('x_mean.npy', 'wb') as f:
+		np.save(f, x_mean)
+	with open('x_rms.npy', 'wb') as f:
+		np.save(f, x_rms)
 
-	with open('k.npy', 'wb') as f:
-		np.save(f, k)
 	with open('phi_2.npy', 'wb') as f:
 		np.save(f, phi_2)
 
+
 	end_save = time.time()
-
-	# analysis file
-	if params.potential == 'flat':
-
-		x_f = np.average(x, weights=psi_2[:, -1])       # final position
-		popt, pcov = curve_fit(mf.gaussian, x, psi_2[:, -1], p0=[x_f, params.sigma])
-		E_f = 0.5 * np.average(k, weights=phi_2[:, -1]) ** 2
-
-		with open('analysis.out', 'w') as f:
-			f.write(str(np.trapz(psi_2[:, 0], x)) + '\n')
-			f.write(str(np.trapz(psi_2[:, -1], x)) + '\n')
-			f.write('Potential = flat\n')
-			f.write('Start:\n')
-			f.write('x_mean = {:1.3f}\n'.format(params.x_0))
-			f.write('std = {:1.3f}\n'.format(params.sigma))
-			f.write('E_mean = {:2.3e}\n'.format(0.5 * params.k_0 ** 2))
-			f.write('End:\n')
-			f.write('x_mean = {:1.3f}\n'.format(x_f))
-			f.write('std = {:1.3f}\n'.format(popt[1]))
-			f.write('E_mean = {:2.3e}\n'.format(E_f))
-
-
+    
+	print(f'Wavepacket array dimension = ({n} x {m})')
 	print("Algorithm runtime = {:5.3f} s".format(end_run - start_time))
-	print("Data saving time = {:5.3f} s".format(end_save - end_run))
 	print("Total runtime = {:5.3f} s".format(end_save - start_time))
-
 
 if __name__ == '__main__':
 	main()

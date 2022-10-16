@@ -1,9 +1,13 @@
+from re import M
 import myfunctions as mf
 import numpy as np
 import pytest
 
+dt = 1e-7
 n = 1024
 x = np.linspace(0., 1., n, endpoint=False)
+k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
+
 boundary_list = ['periodic']
 potential_list = ['flat', 'barrier', 'harmonic', 'delta']
 
@@ -171,6 +175,36 @@ def test_initial_state_2():
     assert np.isclose(i, 1)
 
 
+# potential_operator
+def test_pot_op_1():
+    psi = mf.initial_state(x, 0.5, 0.01, 2000)
+    pot = np.zeros(n)
+    assert mf.potential_operator(psi, pot, dt).dtype == 'complex128'
 
+def test_pot_op_2():
+    psi = mf.initial_state(x, 0.1, 0.01, 2000)
+    pot = np.zeros(n)
+    assert np.all(mf.potential_operator(psi, pot, dt) == psi)
+
+def test_pot_op_3():
+    psi = mf.initial_state(x, 0.1, 0.01, 2000)
+    pot = mf.harmonic_potential(x, 1e8)
+    i = np.trapz(np.abs(psi)**2, x)
+    j = np.trapz(np.abs(mf.potential_operator(psi, pot, dt))**2, x)
+    assert np.isclose(i, j)
+
+# kinetic_operator
+def test_kin_op_1():
+    psi = mf.initial_state(x, 0.5, 0.01, 2000)
+    phi = np.fft.fft(psi)
+    assert mf.kinetic_operator(phi, k, dt).dtype == 'complex128'
+
+
+def test_kin_op_2():
+    psi = mf.initial_state(x, 0.2, 0.01, 2000)
+    phi = np.fft.fft(psi)
+    i = 1 / (2 * np.pi * n ** 2) * np.trapz(np.abs(phi) ** 2, k)
+    assert np.isclose(i, 1)
+    
 
 

@@ -39,7 +39,8 @@ def check_initial_momentum(n, sigma, k_0):
 
 def initial_state(x, x_0, sigma, k_0):
     norm = 1. / (2 * np.pi * sigma ** 2) ** 0.25 
-    return norm * np.exp(1j * k_0 * x - ((x - x_0) / (2 * sigma)) ** 2)
+    psi = norm * np.exp(1j * k_0 * x - ((x - x_0) / (2 * sigma)) ** 2)
+    return psi
     
 
 def potential_operator(psi, pot, dt):
@@ -92,3 +93,8 @@ def harmonic_potential(x, a):
     # centered harmonic potential
     n = len(x)
     return a * (x - x[n//2]) ** 2
+
+
+def rms_x(x, psi, x_m):
+    x2_m = np.mean(x ** 2 * psi)
+    return np.sqrt(x2_m - x_m ** 2)
