@@ -95,6 +95,10 @@ def harmonic_potential(x, a):
     return a * (x - x[n//2]) ** 2
 
 
-def rms_x(x, psi, x_m):
-    x2_m = np.mean(x ** 2 * psi)
+def rms_x(x, psi_2, x_m):
+    x2_m = np.mean(x ** 2 * psi_2)
     return np.sqrt(x2_m - x_m ** 2)
+
+def rms_k(k, phi_2, k_m):
+    k2_m = np.mean(k ** 2 * phi_2) * 2 * np.pi * len(k)
+    return np.sqrt(k2_m - k_m ** 2)
