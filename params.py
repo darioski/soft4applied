@@ -8,7 +8,7 @@ t = 0.001  # simulation time
 
 sigma = 0.08 # std
 x_0 = 0.5    # starting position 
-k_0 = 1000 # initial momentum
+k_0 = 1000   # initial momentum
 
 # boundary conditions
 
