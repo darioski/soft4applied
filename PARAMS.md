@@ -32,7 +32,7 @@ All quantities are expressed in atomic units.
 ## Plot settings
 
 * **file_format _(str)_** : Save the animation in the desired format.
-  Possible choices are: _'gif'_, _'mp4'_, _'html'_.
+  Possible choices are: _'gif'_, _'mp4'_.
 
 * **play_speed _(int)_** : Reduce the arrays by this factor to increase the animation speed.
 
