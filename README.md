@@ -35,8 +35,9 @@ If this is the case, install it by running on your terminal the command `conda i
 
 Here are some examples simulating known quantum phenomena:
 
-* [spreading](spreading.html)
+* [spreading](spreading.ipynb)
 * [potential well]
 * [quantum tunneling]
 * [harmonic oscillator]
 
+![alt text](anim.gif)
