@@ -38,6 +38,6 @@ Here are some examples simulating known quantum phenomena:
 * [Wave-packet spreading](examples/spreading.md)
 * [Potential well](examples/well.md)
 * [Quantum tunneling](examples/tunnel.md)
-* [Harmonic oscillator](examples/oscill.md)
+* [Harmonic oscillator ground state](examples/oscill.md)
 
 
