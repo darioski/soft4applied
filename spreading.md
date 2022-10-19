@@ -38,7 +38,7 @@ play_speed = 100 # video duration (seconds) = t * 2e5 / speed
 
 ## Animation
 
-![alt text](anim.gif)
+![alt text](<img src="anim.gif" width=100 height=100 \>)
 
 
 ## Data analysis
