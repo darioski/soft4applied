@@ -26,7 +26,7 @@ h = 1e7  # height: h < 0 = potential well
 
 # harmonic potential 
 
-a = 5e7    # aperture
+a = 1e7    # aperture
 
 # delta potential
 
@@ -36,7 +36,7 @@ alpha = 1e6    # height
 # plotting parameters
 
 # file format
-file_format = 'html'  # 'gif', 'html', 'mp4'
+file_format = 'mp4'  # 'gif', 'html', 'mp4'
 
 # animation speed multiplier
 

@@ -61,6 +61,7 @@ phi_2 = 1 / (2 * np.pi * n ** 2) * np.abs(phi) ** 2
 p_left = np.empty(m+1)
 x_mean = np.empty(m+1)
 x_rms = np.empty(m+1)
+pk_left = np.empty(m+1)
 k_mean = np.empty(m+1)
 k_rms = np.empty(m+1)
 
@@ -68,6 +69,7 @@ for j in range(m+1):
 	p_left[j] = 0.5 * np.mean(psi_2[:n//2, j])
 	x_mean[j] = np.mean(x * psi_2[:, j])
 	x_rms[j] = mf.rms_x(x, psi_2[:, j], x_mean[j])
+	pk_left[j] = 0.5 * np.sum(phi_2[n//2:, j]) * 2 * np.pi
 	k_mean[j] = np.sum(k * phi_2[:, j]) * 2 * np.pi
 	k_rms[j] = mf.rms_k(k, phi_2[:, j], k_mean[j])
 
@@ -75,22 +77,19 @@ end_run = time.time()
 
 print("Almost done! Saving data... please wait")
 
-# save in output files
-
+# save in binary files
 with open('pot.npy', 'wb') as f:
 	np.save(f, pot)
 with open('psi_2.npy', 'wb') as f:
 	np.save(f, psi_2)
-
-
 with open('phi_2.npy', 'wb') as f:
 	np.save(f, phi_2)
 
 # write statistics as csv
 d = {'time':dt*np.arange(m+1), 'p_left':p_left, 'x_mean':x_mean, 'x_rms':x_rms, 
-     'k_mean':k_mean, 'k_rms':k_rms}
-stat = pd.DataFrame(data=d)
-stat.to_csv('statistics.csv', index=False)
+     'pk_left':pk_left, 'k_mean':k_mean, 'k_rms':k_rms}
+stats = pd.DataFrame(data=d)
+stats.to_csv('statistics.csv', index=False)
 
 end_save = time.time()
 
