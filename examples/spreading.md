@@ -29,16 +29,16 @@ potential = 'flat'   # 'flat', 'barrier', 'harmonic', 'delta'
 # plotting parameters
 
 # file format
-file_format = 'mp4'  # 'gif', 'mp4'
+file_format = 'gif'  # 'gif', 'mp4'
 
 # animation speed multiplier
 
-play_speed = 100 # video duration (seconds) = t * 2e5 / speed
+play_speed = 50 # video duration (seconds) = t * 2e5 / speed
 ```
 
 ## Animation
 
-<img src="anim.gif" width=100 height=100 />
+<img src="../gifs/spreading.gif" width=600 height=400 />
 
 
 ## Data analysis
