@@ -38,19 +38,7 @@ play_speed = 100 # video duration (seconds) = t * 2e5 / speed
 
 ## Animation
 
-
-```python
-from IPython.display import display, HTML
-
-video = '<video width="800" height="500" controls autoplay loop> \
-  <source type="video/mp4" src="anim.mp4"> \
-  </video>'
-
-display(HTML(video))
-```
-
-
-<video width="800" height="500" controls autoplay loop>   <source type="video/mp4" src="anim.mp4">   </video>
+![alt text](anim.gif)
 
 
 ## Data analysis
