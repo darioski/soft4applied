@@ -1,11 +1,6 @@
 import numpy as np
 
 
-def gaussian(x, x_0, sigma):
-    # normalized gaussian function
-    return 1 / np.sqrt(2 * np.pi * sigma ** 2) * np.exp(-0.5 * (x - x_0) ** 2 / sigma ** 2)
-
-
 def check_time_length(t, dt):
     if t < dt:
         raise ValueError("Input parameter \'t\' is too small. Choose \'t\' bigger than {:1.1e}".format(dt))
@@ -101,5 +96,5 @@ def rms_x(x, psi_2, x_m):
     return np.sqrt(x2_m - x_m ** 2)
 
 def rms_k(k, phi_2, k_m):
-    k2_m = np.mean(k ** 2 * phi_2) * 2 * np.pi * len(k)
+    k2_m = np.sum(k ** 2 * phi_2) * 2 * np.pi
     return np.sqrt(k2_m - k_m ** 2)

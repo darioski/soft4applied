@@ -85,6 +85,7 @@ with open('psi_2.npy', 'wb') as f:
 with open('phi_2.npy', 'wb') as f:
 	np.save(f, phi_2)
 
+
 # write statistics as csv
 d = {'time':dt*np.arange(m+1), 'p_left':p_left, 'x_mean':x_mean, 'x_rms':x_rms, 
      'pk_left':pk_left, 'k_mean':k_mean, 'k_rms':k_rms}

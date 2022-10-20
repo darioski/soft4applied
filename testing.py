@@ -1,4 +1,3 @@
-from re import M
 import myfunctions as mf
 import numpy as np
 import pytest
@@ -158,11 +157,6 @@ def test_bound_input_2():
 def test_bound_input_3():
     with pytest.raises(ValueError):
         mf.check_boundary('', boundary_list)
-
-# gaussian
-def test_gaussian_norm():
-    i = np.trapz(mf.gaussian(x, 0.5, 0.01), x)
-    assert np.isclose(i, 1)
 
 # initial_state
 def test_initial_state_1():
