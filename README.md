@@ -4,7 +4,7 @@
 ## Theory 
 The [time-dependent Schrödinger equation](https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation) describes the dynamics of a particle as a wave. The wave-function is indicated with the symbol $\psi(x, t)$. A **unitary evolution operator** $U(t) = e^{-\frac{i}{\hbar} \hat{H} t}$ can be defined so that $\psi(x, t) = \hat{U}(t) \psi(x, 0)$, which satisfies the equation.
 
-Given as initial condition $\psi(x, 0)$ a **gaussian wave-packet** with initial average momentum $k_0$, it is possible to numerically solve the problem using small time-steps. See [Algorithm](./INFO/ALGO.md).
+Given as initial condition $\psi(x, 0)$ a **gaussian wave-packet** with initial average momentum $k_0$, it is possible to numerically solve the problem using small time-steps. See [Algo](./INFO/ALGO.md).
 
 ## Code implementation
 The code exploits the library [NumPy](https://numpy.org/) and the speed it provides when operating
