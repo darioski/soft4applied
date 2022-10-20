@@ -2,13 +2,14 @@
 
 
 ## Theory 
+The [time-dependent Schrödinger equation](https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation) describes the dynamics of a particle as a wave, with 
+symbol $\psi(x, t)$. We can define the **unitary evolution operator** $U(t) = e^{-\frac{i}{\hbar} \hat{H} t}$ such that $\psi(x, t) = \hat{U}(t) \psi(x, 0)$, which satisfies the linear equation.
 
-
-
-See [Theory]
+Given as initial condition $\psi(x, 0)$ a **gaussian wave-packet** with initial average momentum $k_0$, it is possible to numerically solve the problem using small time-steps. See [Algorithm](ALG.md).
 
 ## Code implementation
-
+The code exploits the library [NumPy](https://numpy.org/) and the speed it provides when operating
+with matrices. For details, see [Code implementation](IMPL.md).
 
 
 ## Usage
@@ -18,8 +19,8 @@ See [Theory]
 ```
 python ./run.py
 ```
-The script returns two binary files in the _.npy_ format, where the _Nx(M+1)_ NumPy arrays are stored. 
-It also returns a _.csv_ file with the statistics computed for each simulation step.
+The script returns three binary files in the _.npy_ format, where the two _Nx(M+1)_ NumPy arrays and the potential array are stored. 
+It also returns a _.csv_ file with the statistics computed for each step of the simulation.
 
 
 3. To visualize the simulation, run the script _./myplot.py_ with the command
@@ -33,11 +34,9 @@ If this is the case, install it by running on your terminal the command `conda i
 
 ## Examples
 
-Here are some examples simulating known quantum phenomena:
+Here are some example simulating quantum behaviour:
 
 * [Wave-packet spreading](examples/spreading.md)
 * [Potential well](examples/well.md)
 * [Quantum tunneling](examples/tunnel.md)
 * [Harmonic oscillator ground state](examples/oscill.md)
-
-
