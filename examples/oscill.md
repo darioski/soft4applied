@@ -1,8 +1,8 @@
 # Quantum harmonic oscillator ground state
 
-In the harmonic oscillator the potential is in the form $V(x) = \frac{1}{2}k x^2$. 
+In the harmonic oscillator the potential is in the form $V(x) = \frac{1}{2} m \omega^2 x^2$. 
 It can be proven that in the ground state the probability density of the oscillator is shaped like a gaussian, and the standard deviation is $\sigma = \frac{1}{\sqrt 2 \omega}$ (in atomic units).
-Therefore, if we choose our **sigma** parameter to be equal to $\frac{1}{\sqrt{ 2 \sqrt{2 a}}}$, where $a$ is the aperture of the parabola, we should obtain a state which is time-independent, i.e. the ground eigenstate.
+Therefore, if we choose our **sigma** parameter to be equal to $\frac{1}{\sqrt{ 2 \sqrt{2 a}}}$, where $a$ is the aperture of the parabola, we obtain a state which is time-independent, i.e. the ground eigenstate.
 
 ## Input parameters _(params.py)_
 
