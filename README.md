@@ -4,15 +4,15 @@
 ## Theory 
 The [time-dependent Schrödinger equation](https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation) describes the dynamics of a particle as a wave. The wave-function is indicated with the symbol $\psi(x, t)$. A **unitary evolution operator** $U(t) = e^{-\frac{i}{\hbar} \hat{H} t}$ can be defined so that $\psi(x, t) = \hat{U}(t) \psi(x, 0)$, which satisfies the equation.
 
-Given as initial condition $\psi(x, 0)$ a **gaussian wave-packet** with initial average momentum $k_0$, it is possible to numerically solve the problem using small time-steps. See [Algorithm](ALG.md).
+Given as initial condition $\psi(x, 0)$ a **gaussian wave-packet** with initial average momentum $k_0$, it is possible to numerically solve the problem using small time-steps. See [Algorithm](./INFO/ALG.md).
 
 ## Code implementation
 The code exploits the library [NumPy](https://numpy.org/) and the speed it provides when operating
-with matrices. For details, see [Code implementation](IMPL.md).
+with matrices. For details, see [Code implementation](./INFO/IMPL.md).
 
 
 ## Usage
-1. Edit the input file _./params.py_ and choose the value of the desired parameters. See [List of input parameters](./PARAMS.md).
+1. Edit the input file _./params.py_ and choose the value of the desired parameters. See [List of input parameters](./INFO/PARAMS.md).
 
 2. After the input file has been edited, run the simulation with the command
 ```
