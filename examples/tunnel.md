@@ -1,6 +1,6 @@
 # Quantum tunneling
 
-A wave-packet with initial momentum $k_0 = 500$ has a kinetic energy equal to $E = 1.25 \times 10^5$. Due to the energy distribution in the reciprocal space, it can still overcome a barrier having greater energy, in this case $1.3 \times 10^5$.
+A wave-packet with initial momentum $k_0 = 500$ has a kinetic energy equal to $E = 1.25 \times 10^5$ (atomic units). Due to the energy distribution in the reciprocal space, it can still overcome a barrier having greater energy, in this case $1.3 \times 10^5$.
 
 ## Input parameters _(params.py)_
 
