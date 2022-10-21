@@ -49,7 +49,7 @@ def kinetic_operator(phi, k, dt):
 
 
 def timestep(psi, pot, k, dt):
-    # Trotter-Suzuki formula
+    # Trotter-Suzuki formula + FFT
     psi = potential_operator(psi, pot, dt)  # apply operator V/2
     phi = np.fft.fft(psi)                   # fft to reciprocal space
     phi = kinetic_operator(phi, k, dt)      # apply operator T

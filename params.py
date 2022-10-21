@@ -6,9 +6,9 @@ t = 0.005  # simulation time
 #----------------------
 # gaussian parameters
 
-sigma = 0.0334370152488211 # std
-x_0 = 0.5   # starting position 
-k_0 = 0   # initial momentum
+sigma = 0.02 # std
+x_0 = 0.3   # starting position 
+k_0 = 500   # initial momentum
 
 # boundary conditions
 
@@ -17,12 +17,12 @@ boundary = 'periodic'   # 'periodic'
 #-----------------------
 # potential parameters
 
-potential = 'harmonic'   # 'flat', 'barrier', 'harmonic', 'delta'
+potential = 'barrier'   # 'flat', 'barrier', 'harmonic', 'delta'
 
 # potential barrier / well
 
-b = 0.02 # half width 
-h = 1.3e5  # height: h < 0 = potential well
+b = 0.01 # half width 
+h = 2.5e5  # height: h < 0 = potential well
 
 # harmonic potential 
 
