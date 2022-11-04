@@ -1,22 +1,35 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
-import params
 import pandas as pd
+import configparser
+from pathlib import Path
+
+config = configparser.ConfigParser()
+config.read('config.txt')
+
+potential = config.get('settings', 'potential')
+freq = int(config.get('settings', 'play_speed'))
+
+filepath_1 = config.get('paths', 'pot')
+filepath_2 = config.get('paths', 'psi_2')
+filepath_3 = config.get('paths', 'phi_2')
+filepath_4 = config.get('paths', 'statistics')
+
+filepath_5 = config.get('paths', 'animation')
 
 
 # load data to plot
-with open('pot.npy', 'rb') as f:
+with open(filepath_1, 'rb') as f:
     pot = np.load(f)
-with open('psi_2.npy', 'rb') as f:
+with open(filepath_2, 'rb') as f:
     psi_2 = np.load(f)
-with open('phi_2.npy', 'rb') as f:
+with open(filepath_3, 'rb') as f:
     phi_2 = np.load(f)
 
-stats = pd.read_csv('statistics.csv')
+stats = pd.read_csv(filepath_4)
 
 # reduce arrays size to increase speed
-freq = int(params.play_speed)
 
 psi_2 = psi_2[:, ::freq]
 phi_2 = phi_2[:, ::freq]
@@ -38,16 +51,18 @@ k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 y_lim =  1.1 * np.max(psi_2[:, 0])
 
 # rescale barrier potential to fit in the figure
-if params.potential == 'barrier':
-    if params.h < 0:
-        pot = 0.8 * y_lim * pot / abs(params.h) + 0.85 * y_lim
+if potential == 'barrier':
+    h = float(config.get('settings', 'h'))
+    if h < 0:
+        pot = 0.8 * y_lim * pot / abs(h) + 0.85 * y_lim
     else:
-        pot *= 0.85 * y_lim / params.h
+        pot *= 0.85 * y_lim / h
 
 # rescale harmonic potential to fit in the figure
-if params.potential == 'harmonic':
+if potential == 'harmonic':
+    a = float(config.get('settings', 'a'))
     y_lim = 1.1 * np.max(psi_2)
-    pot *= 2 * y_lim / abs(params.a)
+    pot *= 2 * y_lim / abs(a)
 
 # invert arrays for better plotting
 k = np.concatenate((k[n//2:], k[:n//2]))
@@ -100,14 +115,16 @@ def update(frame):
 # create animation to show/save
 anim = animation.FuncAnimation(fig, update, frames=m, interval=20)
 
-if params.file_format == 'gif':
+if filepath_5[-4:] == '.gif':
+    Path(filepath_5).parent.mkdir(parents=True, exist_ok=True)
     gif_writer = animation.PillowWriter(fps=50)
-    anim.save('anim.gif', writer=gif_writer)
+    anim.save(filepath_5, writer=gif_writer)
 
-if params.file_format == 'mp4':
+if filepath_5[-4:] == '.mp4':
+    Path(filepath_5).parent.mkdir(parents=True, exist_ok=True)
     video_writer = animation.FFMpegWriter(fps=50)
     anim.save('anim.mp4', writer=video_writer)
 
-if params.file_format not in ['gif', 'mp4']:
+if filepath_5[-4:] not in ['.gif', '.mp4']:
     plt.show()
     plt.close()
