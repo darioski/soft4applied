@@ -39,17 +39,12 @@ Path(filepath_4).parent.mkdir(parents=True, exist_ok=True)
 n = int(1 / dx)
 m = abs(int(t / dt))
 
-wp.check_time_length(t, dt)
-
 # real and momenta space
 x = np.linspace(0., 1., n, endpoint=False)
 k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
 
 # choose potential
-potential_list = ['flat', 'barrier', 'harmonic', 'delta']
-wp.check_potential(potential, potential_list)
-if potential == 'flat':
-	pot = np.zeros(n)
+pot = np.zeros(n)
 if potential == 'barrier':
 	b = float(config.get('settings', 'b'))
 	h = float(config.get('settings', 'h'))
@@ -62,15 +57,23 @@ if potential == 'delta':
 	pot = wp.barrier_potential(x, dx, alpha)
 
 
-# boundary conditions
-boundary_list = ['periodic']
-wp.check_boundary(boundary, boundary_list)
+# control ---> raise exception if:
+# there are no timesteps to be performed
+if m == 0:
+	raise ValueError('Input parameter \'t\' is too small. Choose \'t\' bigger than {:1.1e}'.format(dt))
+# starting position is out of range
+if not 0. < x_0 < 1.:
+	raise ValueError('Input parameter \'x_0\' is out of range (0, 1).')
+# rms of the gaussian is smaller than 3 * dx
+if sigma < 3 * dx:
+	raise ValueError('Chosen \'sigma\' is too small.')
+# the gaussian is too close to the edge (tolerance = 6 * sigma)
+if x_0 < 6 * sigma or 1 - x_0 < 6 * sigma:
+	raise ValueError('Wave-packet is too close to the edge.\n Choose a different \'x_0\' or a smaller \'sigma\'.')
+# initial momentum is out of range (k_max = pi * n, tolerance = 3 / sigma)
+if np.pi * n - abs(k_0) < 3 / sigma:
+	raise ValueError('Chosen \'k_0\' is too large.')
 
-# check initial conditions
-wp.is_in_range(x_0)
-wp.is_wide_enough(sigma, dx)
-wp.is_centered(x_0, sigma)
-wp.check_initial_momentum(n, sigma, k_0)
 
 # set initial state
 psi = np.empty((n, m+1), dtype=complex)
