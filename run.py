@@ -4,11 +4,14 @@ import time
 import pandas as pd
 import configparser
 from pathlib import Path
+import sys
 
 start_time = time.time()
 
+
 config = configparser.ConfigParser()
-config.read('config.txt')
+config_file = sys.argv[1]
+config.read(config_file)
 
 t = float(config.get('settings', 't'))
 dt = float(config.get('settings', 'dt'))
