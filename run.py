@@ -34,7 +34,7 @@ Path(filepath_4).parent.mkdir(parents=True, exist_ok=True)
 
 # set parameters
 n = int(1 / dx)
-m = int(t / dt)
+m = abs(int(t / dt))
 
 wp.check_time_length(t, dt)
 

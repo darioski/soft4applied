@@ -34,6 +34,7 @@ stats = pd.read_csv(filepath_4)
 psi_2 = psi_2[:, ::freq]
 phi_2 = phi_2[:, ::freq]
 
+time = np.array(stats['time'])[::freq]
 p_left = np.array(stats['p_left'])[::freq]
 x_mean = np.array(stats['x_mean'])[::freq]
 x_rms = np.array(stats['x_rms'])[::freq]
@@ -101,7 +102,7 @@ def update(frame):
     # real space
     line1.set_ydata(psi_2[:, frame])
 
-    time_text_t.set_text('t = {:2.6f}'.format(1e-7 * frame * freq))
+    time_text_t.set_text('t = {:2.6f}'.format(time[frame]))
     time_text_left.set_text('P(x<0.5)= {:2.4f}'.format(p_left[frame]))
     time_text_mean.set_text('<x> = {:2.3f}'.format(x_mean[frame]))
     time_text_rms.set_text('rms(x) = {:2.4f}'.format(x_rms[frame]))
