@@ -1,0 +1,30 @@
+[settings]
+
+t = 0.001
+
+
+sigma = 0.02
+x_0 = 0.3
+k_0 = 500
+
+
+boundary = periodic
+
+
+potential = barrier
+
+
+b = 0.01
+h = 2e5
+
+a = 1e5
+
+
+alpha = 2e5
+
+
+file_format = 
+
+
+play_speed = 100
+

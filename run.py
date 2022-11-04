@@ -1,19 +1,31 @@
 import numpy as np
 import wavepacket as wp
-import params
 import time
 import pandas as pd
-
+import configparser
 
 start_time = time.time()
+
+
+config = configparser.ConfigParser()
+config.read('config.txt')
+
+t = float(config.get('settings', 't'))
+potential = config.get('settings', 'potential')
+boundary = config.get('settings', 'boundary')
+
+x_0 = float(config.get('settings', 'x_0'))
+sigma = float(config.get('settings', 'sigma'))
+k_0 = float(config.get('settings', 'k_0'))
+
 
 # set parameters
 dt = 1e-7
 n = 1024
-m = int(params.t / dt)
+m = int(t / dt)
 dx = 1 / n
 
-wp.check_time_length(params.t, dt)
+wp.check_time_length(t, dt)
 
 # real and momenta space
 x = np.linspace(0., 1., n, endpoint=False)
@@ -21,30 +33,35 @@ k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
 
 # choose potential
 potential_list = ['flat', 'barrier', 'harmonic', 'delta']
-wp.check_potential(params.potential, potential_list)
-if params.potential == 'flat':
+wp.check_potential(potential, potential_list)
+if potential == 'flat':
 	pot = np.zeros(n)
-if params.potential == 'barrier':
-	pot = wp.barrier_potential(x, params.b, params.h)
-if params.potential == 'harmonic':
-	pot = wp.harmonic_potential(x, params.a)
-if params.potential == 'delta':
-	pot = wp.barrier_potential(x, dx, params.alpha)
+if potential == 'barrier':
+	b = float(config.get('settings', 'b'))
+	h = float(config.get('settings', 'h'))
+	pot = wp.barrier_potential(x, b, h)
+if potential == 'harmonic':
+	a = float(config.get('settings', 'a'))
+	pot = wp.harmonic_potential(x, a)
+if potential == 'delta':
+	alpha = float(config.get('settings', 'alpha'))
+	pot = wp.barrier_potential(x, dx, alpha)
+
 
 # boundary conditions
 boundary_list = ['periodic']
-wp.check_boundary(params.boundary, boundary_list)
+wp.check_boundary(boundary, boundary_list)
 
 # check initial conditions
-wp.is_in_range(params.x_0)
-wp.is_wide_enough(params.sigma, dx)
-wp.is_centered(params.x_0, params.sigma)
-wp.check_initial_momentum(n, params.sigma, params.k_0)
+wp.is_in_range(x_0)
+wp.is_wide_enough(sigma, dx)
+wp.is_centered(x_0, sigma)
+wp.check_initial_momentum(n, sigma, k_0)
 
 # set initial state
 psi = np.empty((n, m+1), dtype=complex)
 phi = np.empty((n, m+1), dtype=complex)
-psi[:, 0] = wp.initial_state(x, params.x_0, params.sigma, params.k_0)
+psi[:, 0] = wp.initial_state(x, x_0, sigma, k_0)
 phi[:, 0] = np.fft.fft(psi[:, 0])
 
 # apply algorithm
