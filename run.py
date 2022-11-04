@@ -7,11 +7,13 @@ from pathlib import Path
 
 start_time = time.time()
 
-
 config = configparser.ConfigParser()
 config.read('config.txt')
 
 t = float(config.get('settings', 't'))
+dt = float(config.get('settings', 'dt'))
+dx = float(config.get('settings', 'dx'))
+
 potential = config.get('settings', 'potential')
 boundary = config.get('settings', 'boundary')
 
@@ -31,10 +33,8 @@ Path(filepath_4).parent.mkdir(parents=True, exist_ok=True)
 
 
 # set parameters
-dt = 1e-7
-n = 1024
+n = int(1 / dx)
 m = int(t / dt)
-dx = 1 / n
 
 wp.check_time_length(t, dt)
 

@@ -2,6 +2,9 @@
 
 t = 0.001
 
+dt = 1e-7
+dx = 1e-3
+
 
 sigma = 0.02
 x_0 = 0.3
@@ -22,9 +25,6 @@ a = 1e5
 
 alpha = 2e5
 
-
-file_format = 
-
 play_speed = 100
 
 [paths]
@@ -35,4 +35,4 @@ pot: ./raw_data/pot.npy
 
 statistics: ./stats/stats.csv
 
-
+animation: ./videos/animation.gif
