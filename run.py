@@ -86,20 +86,8 @@ psi_2 = np.abs(psi) ** 2
 phi_2 = 1 / (2 * np.pi * n ** 2) * np.abs(phi) ** 2
 
 # statistics
-p_left = np.empty(m+1)
-x_mean = np.empty(m+1)
-x_rms = np.empty(m+1)
-pk_left = np.empty(m+1)
-k_mean = np.empty(m+1)
-k_rms = np.empty(m+1)
-
-for j in range(m+1):
-	p_left[j] = 0.5 * np.mean(psi_2[:n//2, j])
-	x_mean[j] = np.mean(x * psi_2[:, j])
-	x_rms[j] = wp.rms_x(x, psi_2[:, j], x_mean[j])
-	pk_left[j] = 0.5 * np.sum(phi_2[n//2:, j]) * 2 * np.pi
-	k_mean[j] = np.sum(k * phi_2[:, j]) * 2 * np.pi
-	k_rms[j] = wp.rms_k(k, phi_2[:, j], k_mean[j])
+p_left, x_mean, x_rms = wp.x_stats(psi_2, x)
+pk_left, k_mean, k_rms = wp.k_stats(phi_2, k)
 
 end_run = time.time()
 
@@ -112,7 +100,6 @@ with open(filepath_2, 'wb') as f:
 	np.save(f, psi_2)
 with open(filepath_3, 'wb') as f:
 	np.save(f, phi_2)
-
 
 # write statistics as csv
 d = {'time':dt*np.arange(m+1), 'p_left':p_left, 'x_mean':x_mean, 'x_rms':x_rms, 
