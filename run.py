@@ -8,54 +8,19 @@ import sys
 
 start_time = time.time()
 
-
+# read parameters
 config = configparser.ConfigParser()
 config_file = sys.argv[1]
 config.read(config_file)
-
 t = float(config.get('settings', 't'))
 dt = float(config.get('settings', 'dt'))
 dx = float(config.get('settings', 'dx'))
-
 potential = config.get('settings', 'potential')
-boundary = config.get('settings', 'boundary')
-
 x_0 = float(config.get('settings', 'x_0'))
 sigma = float(config.get('settings', 'sigma'))
 k_0 = float(config.get('settings', 'k_0'))
-
-filepath_1 = config.get('paths', 'pot')
-filepath_2 = config.get('paths', 'psi_2')
-filepath_3 = config.get('paths', 'phi_2')
-filepath_4 = config.get('paths', 'statistics')
-
-Path(filepath_1).parent.mkdir(parents=True, exist_ok=True)
-Path(filepath_2).parent.mkdir(parents=True, exist_ok=True)
-Path(filepath_3).parent.mkdir(parents=True, exist_ok=True)
-Path(filepath_4).parent.mkdir(parents=True, exist_ok=True)
-
-
-# set parameters
 n = int(1 / dx)
 m = abs(int(t / dt))
-
-# real and momenta space
-x = np.linspace(0., 1., n, endpoint=False)
-k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
-
-# choose potential
-pot = np.zeros(n)
-if potential == 'barrier':
-	b = float(config.get('settings', 'b'))
-	h = float(config.get('settings', 'h'))
-	pot = wp.barrier_potential(x, b, h)
-if potential == 'harmonic':
-	a = float(config.get('settings', 'a'))
-	pot = wp.harmonic_potential(x, a)
-if potential == 'delta':
-	alpha = float(config.get('settings', 'alpha'))
-	pot = wp.barrier_potential(x, dx, alpha)
-
 
 # control ---> raise exception if:
 # there are no timesteps to be performed
@@ -73,6 +38,36 @@ if x_0 < 6 * sigma or 1 - x_0 < 6 * sigma:
 # initial momentum is out of range (k_max = pi * n, tolerance = 3 / sigma)
 if np.pi * n - abs(k_0) < 3 / sigma:
 	raise ValueError('Chosen \'k_0\' is too large.')
+
+# read filepaths and create parent directories
+filepath_1 = config.get('paths', 'pot')
+filepath_2 = config.get('paths', 'psi_2')
+filepath_3 = config.get('paths', 'phi_2')
+filepath_4 = config.get('paths', 'statistics')
+Path(filepath_1).parent.mkdir(parents=True, exist_ok=True)
+Path(filepath_2).parent.mkdir(parents=True, exist_ok=True)
+Path(filepath_3).parent.mkdir(parents=True, exist_ok=True)
+Path(filepath_4).parent.mkdir(parents=True, exist_ok=True)
+
+# create real and reciprocal space
+x = np.linspace(0., 1., n, endpoint=False)
+k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
+
+# create potential profile
+pot = np.zeros(n)
+if potential == 'barrier':
+	b = float(config.get('settings', 'b'))
+	h = float(config.get('settings', 'h'))
+	pot = wp.barrier_potential(x, b, h)
+if potential == 'harmonic':
+	a = float(config.get('settings', 'a'))
+	pot = wp.harmonic_potential(x, a)
+if potential == 'delta':
+	alpha = float(config.get('settings', 'alpha'))
+	pot = wp.barrier_potential(x, dx, alpha)
+
+
+
 
 
 # set initial state
