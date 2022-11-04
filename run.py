@@ -3,6 +3,7 @@ import wavepacket as wp
 import time
 import pandas as pd
 import configparser
+from pathlib import Path
 
 start_time = time.time()
 
@@ -17,6 +18,16 @@ boundary = config.get('settings', 'boundary')
 x_0 = float(config.get('settings', 'x_0'))
 sigma = float(config.get('settings', 'sigma'))
 k_0 = float(config.get('settings', 'k_0'))
+
+filepath_1 = config.get('paths', 'pot')
+filepath_2 = config.get('paths', 'psi_2')
+filepath_3 = config.get('paths', 'phi_2')
+filepath_4 = config.get('paths', 'statistics')
+
+Path(filepath_1).parent.mkdir(parents=True, exist_ok=True)
+Path(filepath_2).parent.mkdir(parents=True, exist_ok=True)
+Path(filepath_3).parent.mkdir(parents=True, exist_ok=True)
+Path(filepath_4).parent.mkdir(parents=True, exist_ok=True)
 
 
 # set parameters
@@ -95,11 +106,11 @@ end_run = time.time()
 print("Almost done! Saving data... please wait")
 
 # save in binary files
-with open('pot.npy', 'wb') as f:
+with open(filepath_1, 'wb') as f:
 	np.save(f, pot)
-with open('psi_2.npy', 'wb') as f:
+with open(filepath_2, 'wb') as f:
 	np.save(f, psi_2)
-with open('phi_2.npy', 'wb') as f:
+with open(filepath_3, 'wb') as f:
 	np.save(f, phi_2)
 
 
@@ -107,7 +118,7 @@ with open('phi_2.npy', 'wb') as f:
 d = {'time':dt*np.arange(m+1), 'p_left':p_left, 'x_mean':x_mean, 'x_rms':x_rms, 
      'pk_left':pk_left, 'k_mean':k_mean, 'k_rms':k_rms}
 stats = pd.DataFrame(data=d)
-stats.to_csv('statistics.csv', index=False)
+stats.to_csv(filepath_4, index=False)
 
 end_save = time.time()
 

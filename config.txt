@@ -25,6 +25,14 @@ alpha = 2e5
 
 file_format = 
 
-
 play_speed = 100
+
+[paths]
+
+psi_2: ./raw_data/psi_2.npy
+phi_2: ./raw_data/phi_2.npy
+pot: ./raw_data/pot.npy
+
+statistics: ./stats/stats.csv
+
 
