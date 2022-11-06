@@ -67,13 +67,10 @@ if potential == 'delta':
 	pot = wp.barrier_potential(x, dx, alpha)
 
 
-
-
-
 # set initial state
 psi = np.empty((n, m+1), dtype=complex)
 phi = np.empty((n, m+1), dtype=complex)
-psi[:, 0] = wp.initial_state(x, x_0, sigma, k_0)
+psi[:, 0] = wp.gaussian_initial_state(x, x_0, sigma, k_0)
 phi[:, 0] = np.fft.fft(psi[:, 0])
 
 # apply algorithm

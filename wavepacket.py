@@ -1,10 +1,26 @@
 import numpy as np
 
 
-def initial_state(x, x_0, sigma, k_0):
-    norm = 1. / (2 * np.pi * sigma ** 2) ** 0.25 
-    psi = norm * np.exp(1j * k_0 * x - ((x - x_0) / (2 * sigma)) ** 2)
-    return psi
+def gaussian_initial_state(x, start_position, sigma, start_momentum):
+    '''
+    Create a gaussian wavefunction as initial state.
+
+    Parameters
+    ----------
+    x : 1d array, the real space
+    start_position : float, centre of the gaussian
+    sigma : float, standard deviation of the gaussian
+    start_momentum : float, starting average momentum
+
+    Returns
+    -------
+    wavefunction : 1d array, gaussian wavefunction
+    '''
+    # normalization factor
+    norm_factor = 1. / (2 * np.pi * sigma ** 2) ** 0.25 
+    # gaussian wavefunction
+    wavefunction = norm_factor * np.exp(1j * start_momentum * x - ((x - start_position) / (2 * sigma)) ** 2)
+    return wavefunction
     
 
 def potential_operator(psi, pot, dt):
