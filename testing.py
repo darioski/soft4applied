@@ -2,11 +2,6 @@ import wavepacket as wp
 import numpy as np
 from scipy.optimize import curve_fit
 
-dt = 1e-7
-n = 1024
-x = np.linspace(0., 1., n, endpoint=False)
-k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
-
 
 # gaussian_initial_state
 
@@ -235,17 +230,33 @@ def test_potential_operator_on_probability_distribution():
 
 
 # kinetic_operator
-def test_kin_op_1():
-    psi = wp.gaussian_initial_state(x, 0.5, 0.01, 2000)
-    phi = np.fft.fft(psi)
-    assert wp.kinetic_operator(phi, k, dt).dtype == 'complex128'
 
+def test_kinetic_operator_on_probability_distribution():
+    '''
+    Test if the kinetic operator leaves the probability distribution unchanged.
 
-def test_kin_op_2():
-    psi = wp.gaussian_initial_state(x, 0.2, 0.01, 2000)
-    phi = np.fft.fft(psi)
-    i = 1 / (2 * np.pi * n ** 2) * np.trapz(np.abs(phi) ** 2, k)
-    assert np.isclose(i, 1)
-    
+    GIVEN: the fourier transform of a gaussian wavefunction
+    WHEN: I apply the function kinetic_operator
+    THEN: the probability distribution stays unchanged.
+    '''
 
+    # set real and reciprocal space
+    n = 10000
+    x = np.linspace(0, 1, n, endpoint=False)
+    k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
 
+    # set initial state and fft
+    start_position = 0.4
+    sigma = 0.01
+    start_momentum = 1000
+    wavefunction = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)
+    wavefunction_transform = np.fft.fft(wavefunction)
+    transform_probability = 1 / (2 * np.pi * n ** 2) * np.abs(wavefunction_transform) ** 2
+
+    # set timestep
+    dt = 1e-7
+
+    # squared module and integral along k of new probability distribution
+    wavefunction_transform_new = wp.kinetic_operator(wavefunction_transform, k, dt)
+    transform_probability_new = 1 / (2 * np.pi * n ** 2) * np.abs(wavefunction_transform_new) ** 2
+    assert np.all(np.isclose(transform_probability, transform_probability_new))

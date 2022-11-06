@@ -40,9 +40,21 @@ def potential_operator(wavefunction, potential, dt):
     return wavefunction * np.exp(-0.5j * dt * potential)
 
 
-def kinetic_operator(phi, k, dt):
-    # kinetic energy operator
-    return phi * np.exp(-0.5j * dt * k ** 2)
+def kinetic_operator(wavefunction_transform, k, dt):
+    '''
+    Apply the kinetic operator for one timestep dt.
+
+    Parameters
+    ----------
+    wavefunction_transform : 1d array, fourier transform of the wavefunction
+    k : 1d array, the reciprocal space (momentum space)
+    dt : float, timestep length
+
+    Returns
+    -------
+    1d array, partially evolved wavefunction after dt
+    '''
+    return wavefunction_transform * np.exp(-0.5j * dt * k ** 2)
 
 
 def timestep(psi, pot, k, dt):
