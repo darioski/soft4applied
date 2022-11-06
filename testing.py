@@ -478,4 +478,39 @@ def test_timestep_harmonic_groundstate():
     probability_new = np.abs(wavefunction_new) ** 2
 
     assert np.all(np.isclose(probability, probability_new))
-    
+
+
+def test_timestep_transform():
+    '''
+    Test if apply the evolution operator on a wavefunction on a flat potential
+    leaves the momentum distribution unchanged.
+
+    GIVEN: a gaussian wavefunction
+    WHEN: I apply the evolution operator
+    THEN: the momentum distribuiton is left unchanged
+    '''
+    # set real and reciprocal space
+    n = 10000
+    x = np.linspace(0, 1, n, endpoint=False)
+    k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
+
+    # set inital state
+    start_position = 0.5
+    sigma = 0.01
+    start_momentum = 1000
+    wavefunction = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)
+    wavefunction_transform = np.fft.fft(wavefunction)
+    transform_probability = 1 / (2 * np.pi * n ** 2) * np.abs(wavefunction_transform) ** 2
+
+    # set potential
+    potential = np.zeros(n)
+
+    # set timestep
+    dt = 1e-7
+
+    # compute wavefunction after dt and -dt
+    wavefunction_new = wp.timestep(wavefunction, potential, k, dt)
+    wavefunction_transform_new = np.fft.fft(wavefunction_new)
+    transform_probability_new = 1 / (2 * np.pi * n ** 2) * np.abs(wavefunction_transform_new) ** 2
+
+    assert np.all(np.isclose(transform_probability, transform_probability_new))
