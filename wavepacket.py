@@ -23,9 +23,21 @@ def gaussian_initial_state(x, start_position, sigma, start_momentum):
     return wavefunction
     
 
-def potential_operator(psi, pot, dt):
-    # half potential energy operator
-    return psi * np.exp(-0.5j * dt * pot)
+def potential_operator(wavefunction, potential, dt):
+    '''
+    Apply the potential operator for half timestep dt / 2.
+
+    Parameters
+    ----------
+    wavefunction : 1d array, complex-valued wavefunction
+    potential : 1d array, potential profile
+    dt : real, timestep length
+
+    Returns
+    -------
+    1d array, partially evolved wavefunction after dt / 2.
+    '''
+    return wavefunction * np.exp(-0.5j * dt * potential)
 
 
 def kinetic_operator(phi, k, dt):

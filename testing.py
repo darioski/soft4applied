@@ -202,22 +202,37 @@ def test_initial_state_transform_rms():
 
 
 # potential_operator
-def test_pot_op_1():
-    psi = wp.gaussian_initial_state(x, 0.5, 0.01, 2000)
-    pot = np.zeros(n)
-    assert wp.potential_operator(psi, pot, dt).dtype == 'complex128'
 
-def test_pot_op_2():
-    psi = wp.gaussian_initial_state(x, 0.1, 0.01, 2000)
-    pot = np.zeros(n)
-    assert np.all(wp.potential_operator(psi, pot, dt) == psi)
+def test_potential_operator_on_probability_distribution():
+    '''
+    Test if the potenial operator leaves the probability distribution unchanged.
 
-def test_pot_op_3():
-    psi = wp.gaussian_initial_state(x, 0.1, 0.01, 2000)
-    pot = wp.harmonic_potential(x, 1e8)
-    i = np.trapz(np.abs(psi)**2, x)
-    j = np.trapz(np.abs(wp.potential_operator(psi, pot, dt))**2, x)
-    assert np.isclose(i, j)
+    GIVEN: a gaussian wavefunction and random potential
+    WHEN: I apply the function potential_operator
+    THEN: the probability distribution stays unchanged.
+    '''
+
+    # set initial state
+    n = 10000
+    x = np.linspace(0, 1, n, endpoint=False)
+    start_position = 0.4
+    sigma = 0.01
+    start_momentum = 1000
+    wavefunction = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)
+    probability = np.abs(wavefunction) ** 2
+
+    # set potential
+    np.random.seed(1)
+    potential = np.random.rand(n)
+
+    # set timestep
+    dt = 1e-7
+
+    # squared module and integral along x of new wavefunction
+    wavefunction_new = wp.potential_operator(wavefunction, potential, dt)
+    probability_new = np.abs(wavefunction_new) ** 2
+    assert np.all(np.isclose(probability, probability_new))
+
 
 # kinetic_operator
 def test_kin_op_1():
