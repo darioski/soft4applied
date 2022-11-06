@@ -57,14 +57,34 @@ def kinetic_operator(wavefunction_transform, k, dt):
     return wavefunction_transform * np.exp(-0.5j * dt * k ** 2)
 
 
-def timestep(psi, pot, k, dt):
-    # Trotter-Suzuki formula + FFT
-    psi = potential_operator(psi, pot, dt)  # apply operator V/2
-    phi = np.fft.fft(psi)                   # fft to reciprocal space
-    phi = kinetic_operator(phi, k, dt)      # apply operator T
-    psi = np.fft.ifft(phi)                  # inverse fft to real space
-    psi = potential_operator(psi, pot, dt)  # apply operator V/2  
-    return psi
+def timestep(wavefunction, potential, k, dt):
+    '''
+    Apply the evolution operator for one timestep dt using 
+    Trotter-Suzuki decomposition at 2nd order.
+
+    Parameters
+    ----------
+    wavefunction : 1d array, complex-valued wavefunction
+    potential : 1d array, potential profile
+    k : 1d array, the reciprocal space (momentum space)
+    dt : float, timestep length
+
+    Returns
+    -------
+    wavefunction : 1d array, evolved wavefunction after dt
+
+    '''
+    # apply potential operator for dt / 2
+    wavefunction = potential_operator(wavefunction, potential, dt) 
+    # apply fft
+    wavefunction_transform = np.fft.fft(wavefunction)
+    # apply kinetic operator for dt
+    wavefunction_transform = kinetic_operator(wavefunction_transform, k, dt)
+    # apply inverse fft
+    wavefunction = np.fft.ifft(wavefunction_transform)
+    # apply potential operator for dt / 2
+    wavefunction = potential_operator(wavefunction, potential, dt) 
+    return wavefunction
 
 
 def barrier_potential(x, b, h):
