@@ -131,7 +131,7 @@ def x_stats(probability, x):
 
     Parameters
     ----------
-    psi_2 : 2d array, probability density function.
+    probability : 2d array, probability density function.
     x : 1d array, the real space.
 
     Returns
