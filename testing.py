@@ -28,6 +28,28 @@ def test_initial_state_normalized():
     assert np.isclose(I, 1)
 
 
+def test_initial_state_is_symmetric():
+    '''
+    Test if the initial distribution probability is symmetric.
+
+    GIVEN: a gaussian wavefunction centered in the middle of the real space
+    WHEN: I compute the probability distribution 
+    THEN: the probability distribution must be symmetric
+    '''
+    # set initial state
+    n = 10001
+    x = np.linspace(0, 1, n, endpoint=False)
+    start_position = x[n//2]
+    sigma = 0.01
+    start_momentum = 0
+    wavefunction = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)
+
+    # probability distribution
+    probability = np.abs(wavefunction) ** 2
+
+    assert np.all(np.isclose(probability, probability[::-1]))
+
+
 def test_initial_state_center():
     '''
     Test if computed average position coincides with the center of the gaussian.
