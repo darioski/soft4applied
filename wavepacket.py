@@ -87,16 +87,25 @@ def timestep(wavefunction, potential, k, dt):
     return wavefunction
 
 
-def barrier_potential(x, b, h):
-    # centered barrier potential
-    # barrier if h > 0
-    # well if h < 0
+def barrier_potential(x, half_width, height):
+    '''
+    Return a square potential at the center of the x space.
+
+    Parameters
+    ----------
+    x : 1d array, the real space
+    half_width : float, half width of the potential barrier
+    height : float, energy of the potential barrier.
+             if h < 0 ---> potential well
+
+    Returns
+    -------
+    potential : 1d array, the potential profile
+    '''
     n = len(x)
-    pot = np.zeros(n)
-    for i, pos in enumerate(x):
-        if x[n//2] - b < pos < x[n//2] + b:
-            pot[i] = h
-    return pot
+    # return height when the condition is met, 0 elsewhere
+    potential = np.where(np.abs(x - x[n//2]) < half_width, height, 0)
+    return potential
 
 
 def harmonic_potential(x, a):

@@ -514,3 +514,19 @@ def test_timestep_transform():
     transform_probability_new = 1 / (2 * np.pi * n ** 2) * np.abs(wavefunction_transform_new) ** 2
 
     assert np.all(np.isclose(transform_probability, transform_probability_new))
+
+
+def test_barrier_potential_is_symmetric():
+    '''
+    Test if the function barrier_potential returns a symmetric potential.
+
+    GIVEN: the real space x
+    WHEN: I define a barrier potential on it using the function barrier_potential
+    THEN: the potential array must be symmetric.
+    '''
+    n = 1001
+    x = np.linspace(0, 1, n, endpoint=False)
+
+    potential = wp.barrier_potential(x, 0.2, 100)
+
+    assert np.all(potential == potential[::-1])
