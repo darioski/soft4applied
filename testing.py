@@ -574,6 +574,13 @@ def test_harmonic_potential_is_symmetric():
 
 def test_x_stats_of_equidistributed_probability():
     '''
+    Test statistical quantities for a equidistributed probability.
+
+    GIVEN: a equidistributed probability between 0 and 1
+    WHEN: I compute statistical quantities using the function x_stats
+    THEN: - the probability for x < 0.5 must be = 0.5
+          - average position must be in the center
+          - variance must be = 1/12
     '''
 
     n = 1001
@@ -591,6 +598,13 @@ def test_x_stats_of_equidistributed_probability():
 
 def test_x_stats_of_gaussian_distribution():
     '''
+    Test statistical quantities for a gaussian distribution.
+
+    GIVEN: a gaussian distribution between 0 and 1 centered in x = 0.5
+    WHEN: I compute statistical quantities using the function x_stats
+    THEN: - the probability for x < 0.5 must be = 0.5
+          - average position must be in the center
+          - standard deviation must be = sigma   
     '''
     # set initial state
     n = 10001
