@@ -15,10 +15,10 @@ config.read(config_file)
 t = float(config.get('settings', 't'))
 dt = float(config.get('settings', 'dt'))
 dx = float(config.get('settings', 'dx'))
-potential = config.get('settings', 'potential')
-x_0 = float(config.get('settings', 'x_0'))
+potential_type = config.get('settings', 'potential_type')
+start_position = float(config.get('settings', 'start_position'))
 sigma = float(config.get('settings', 'sigma'))
-k_0 = float(config.get('settings', 'k_0'))
+start_momentum = float(config.get('settings', 'start_momentum'))
 n = int(1 / dx)
 m = abs(int(t / dt))
 
@@ -27,22 +27,22 @@ m = abs(int(t / dt))
 if m == 0:
 	raise ValueError('Input parameter \'t\' is too small. Choose \'t\' bigger than {:1.1e}'.format(dt))
 # starting position is out of range
-if not 0. < x_0 < 1.:
+if not 0. < start_position < 1.:
 	raise ValueError('Input parameter \'x_0\' is out of range (0, 1).')
 # rms of the gaussian is smaller than 3 * dx
 if sigma < 3 * dx:
 	raise ValueError('Chosen \'sigma\' is too small.')
 # the gaussian is too close to the edge (tolerance = 6 * sigma)
-if x_0 < 6 * sigma or 1 - x_0 < 6 * sigma:
+if start_position < 6 * sigma or 1 - start_position < 6 * sigma:
 	raise ValueError('Wave-packet is too close to the edge.\n Choose a different \'x_0\' or a smaller \'sigma\'.')
 # initial momentum is out of range (k_max = pi * n, tolerance = 3 / sigma)
-if np.pi * n - abs(k_0) < 3 / sigma:
+if np.pi * n - abs(start_momentum) < 3 / sigma:
 	raise ValueError('Chosen \'k_0\' is too large.')
 
 # read filepaths and create parent directories
-filepath_1 = config.get('paths', 'pot')
-filepath_2 = config.get('paths', 'psi_2')
-filepath_3 = config.get('paths', 'phi_2')
+filepath_1 = config.get('paths', 'potential')
+filepath_2 = config.get('paths', 'probability')
+filepath_3 = config.get('paths', 'transform_probability')
 filepath_4 = config.get('paths', 'statistics')
 Path(filepath_1).parent.mkdir(parents=True, exist_ok=True)
 Path(filepath_2).parent.mkdir(parents=True, exist_ok=True)
@@ -54,38 +54,38 @@ x = np.linspace(0., 1., n, endpoint=False)
 k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
 
 # create potential profile
-pot = np.zeros(n)
-if potential == 'barrier':
-	b = float(config.get('settings', 'b'))
-	h = float(config.get('settings', 'h'))
-	pot = wp.barrier_potential(x, b, h)
-if potential == 'harmonic':
-	a = float(config.get('settings', 'a'))
-	pot = wp.harmonic_potential(x, a)
-if potential == 'delta':
+potential = np.zeros(n)
+if potential_type == 'barrier':
+	half_width = float(config.get('settings', 'half_width'))
+	height = float(config.get('settings', 'height'))
+	potential = wp.barrier_potential(x, half_width, height)
+if potential_type == 'harmonic':
+	aperture = float(config.get('settings', 'aperture'))
+	potential = wp.harmonic_potential(x, aperture)
+if potential_type == 'delta':
 	alpha = float(config.get('settings', 'alpha'))
-	pot = wp.barrier_potential(x, dx, alpha)
+	potential = wp.barrier_potential(x, dx, alpha)
 
 
 # set initial state
-psi = np.empty((n, m+1), dtype=complex)
-phi = np.empty((n, m+1), dtype=complex)
-psi[:, 0] = wp.gaussian_initial_state(x, x_0, sigma, k_0)
-phi[:, 0] = np.fft.fft(psi[:, 0])
+wavefunction = np.empty((n, m+1), dtype=complex)
+wavefunction_transform = np.empty((n, m+1), dtype=complex)
+wavefunction[:, 0] = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)
+wavefunction_transform[:, 0] = np.fft.fft(wavefunction[:, 0])
 
 # apply algorithm
 print("System evolving...  this may take a while...")
 for j in range(m):
-	psi[:, j+1] = wp.timestep(psi[:, j], pot, k, dt) 
-	phi[:, j+1] = np.fft.fft(psi[:, j+1])
+	wavefunction[:, j+1] = wp.timestep(wavefunction[:, j], potential, k, dt) 
+	wavefunction_transform[:, j+1] = np.fft.fft(wavefunction[:, j+1])
 
 # squared module (probability density)
-psi_2 = np.abs(psi) ** 2
-phi_2 = 1 / (2 * np.pi * n ** 2) * np.abs(phi) ** 2
+probability = np.abs(wavefunction) ** 2
+transform_probability = 1 / (2 * np.pi * n ** 2) * np.abs(wavefunction_transform) ** 2
 
 # statistics
-p_left, x_mean, x_rms = wp.x_stats(psi_2, x)
-pk_left, k_mean, k_rms = wp.k_stats(phi_2, k)
+p_left, x_mean, x_rms = wp.x_stats(probability, x)
+pk_left, k_mean, k_rms = wp.k_stats(transform_probability, k)
 
 end_run = time.time()
 
@@ -93,11 +93,11 @@ print("Almost done! Saving data... please wait")
 
 # save in binary files
 with open(filepath_1, 'wb') as f:
-	np.save(f, pot)
+	np.save(f, potential)
 with open(filepath_2, 'wb') as f:
-	np.save(f, psi_2)
+	np.save(f, probability)
 with open(filepath_3, 'wb') as f:
-	np.save(f, phi_2)
+	np.save(f, transform_probability)
 
 # write statistics as csv
 d = {'time':dt*np.arange(m+1), 'p_left':p_left, 'x_mean':x_mean, 'x_rms':x_rms, 

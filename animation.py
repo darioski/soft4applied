@@ -8,12 +8,12 @@ from pathlib import Path
 config = configparser.ConfigParser()
 config.read('config.txt')
 
-potential = config.get('settings', 'potential')
+potential = config.get('settings', 'potential_type')
 freq = int(config.get('settings', 'play_speed'))
 
-filepath_1 = config.get('paths', 'pot')
-filepath_2 = config.get('paths', 'psi_2')
-filepath_3 = config.get('paths', 'phi_2')
+filepath_1 = config.get('paths', 'potential')
+filepath_2 = config.get('paths', 'probability')
+filepath_3 = config.get('paths', 'transform_probability')
 filepath_4 = config.get('paths', 'statistics')
 
 filepath_5 = config.get('paths', 'animation')
@@ -53,7 +53,7 @@ y_lim =  1.1 * np.max(psi_2[:, 0])
 
 # rescale barrier potential to fit in the figure
 if potential == 'barrier':
-    h = float(config.get('settings', 'h'))
+    h = float(config.get('settings', 'height'))
     if h < 0:
         pot = 0.8 * y_lim * pot / abs(h) + 0.85 * y_lim
     else:
@@ -61,7 +61,7 @@ if potential == 'barrier':
 
 # rescale harmonic potential to fit in the figure
 if potential == 'harmonic':
-    a = float(config.get('settings', 'a'))
+    a = float(config.get('settings', 'aperture'))
     y_lim = 1.1 * np.max(psi_2)
     pot *= 2 * y_lim / abs(a)
 
