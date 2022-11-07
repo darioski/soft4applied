@@ -1,38 +1,40 @@
-[settings]
-
-t = 0.001
-
+[Simulation settings]
+# time of the simulation
+t = 1e-5
+# time precision
 dt = 1e-7
-dx = 1e-3
+# spacial precision
+dx = 1e-4
 
+[Initial state settings]
+# standard deviation
+sigma = 0.01
+# average starting position
+start_position = 0.3
+# average starting momentum
+start_momentum = -1000
 
-sigma = 0.02
-x_0 = 0.3
-k_0 = 500
+[Potential profile type]
+# flat, barrier, harmonic, delta
+potential_type = harmonic
 
+[Barrier potential]
+half_width = 0.4
+height = 2e6
 
-boundary = periodic
+[Harmonic potential]
+aperture = 1e5
 
-
-potential = barrier
-
-
-b = 0.01
-h = 2e5
-
-a = 1e5
-
-
+[Delta potential]
 alpha = 2e5
 
-play_speed = 100
+[Paths to files]
 
-[paths]
-
-psi_2: ./raw_data/psi_2.npy
-phi_2: ./raw_data/phi_2.npy
-pot: ./raw_data/pot.npy
-
+probability: ./raw_data/psi_2.npy
+transform_probability: ./raw_data/phi_2.npy
+potential: ./raw_data/pot.npy
 statistics: ./stats/stats.csv
+animation: 
 
-animation: ./videos/animation.gif
+[Animation play speed]
+play_speed = 1

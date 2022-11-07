@@ -12,13 +12,13 @@ start_time = time.time()
 config = configparser.ConfigParser()
 config_file = sys.argv[1]
 config.read(config_file)
-t = float(config.get('settings', 't'))
-dt = float(config.get('settings', 'dt'))
-dx = float(config.get('settings', 'dx'))
-potential_type = config.get('settings', 'potential_type')
-start_position = float(config.get('settings', 'start_position'))
-sigma = float(config.get('settings', 'sigma'))
-start_momentum = float(config.get('settings', 'start_momentum'))
+t = float(config.get('Simulation settings', 't'))
+dt = float(config.get('Simulation settings', 'dt'))
+dx = float(config.get('Simulation settings', 'dx'))
+potential_type = config.get('Potential profile type', 'potential_type')
+start_position = float(config.get('Initial state settings', 'start_position'))
+sigma = float(config.get('Initial state settings', 'sigma'))
+start_momentum = float(config.get('Initial state settings', 'start_momentum'))
 n = int(1 / dx)
 m = abs(int(t / dt))
 
@@ -40,10 +40,10 @@ if np.pi * n - abs(start_momentum) < 3 / sigma:
 	raise ValueError('Chosen \'k_0\' is too large.')
 
 # read filepaths and create parent directories
-filepath_1 = config.get('paths', 'potential')
-filepath_2 = config.get('paths', 'probability')
-filepath_3 = config.get('paths', 'transform_probability')
-filepath_4 = config.get('paths', 'statistics')
+filepath_1 = config.get('Paths to files', 'potential')
+filepath_2 = config.get('Paths to files', 'probability')
+filepath_3 = config.get('Paths to files', 'transform_probability')
+filepath_4 = config.get('Paths to files', 'statistics')
 Path(filepath_1).parent.mkdir(parents=True, exist_ok=True)
 Path(filepath_2).parent.mkdir(parents=True, exist_ok=True)
 Path(filepath_3).parent.mkdir(parents=True, exist_ok=True)
@@ -56,14 +56,14 @@ k = 2 * np.pi * np.fft.fftfreq(n, d=dx)
 # create potential profile
 potential = np.zeros(n)
 if potential_type == 'barrier':
-	half_width = float(config.get('settings', 'half_width'))
-	height = float(config.get('settings', 'height'))
+	half_width = float(config.get('Barrier potential', 'half_width'))
+	height = float(config.get('Barrier potential', 'height'))
 	potential = wp.barrier_potential(x, half_width, height)
 if potential_type == 'harmonic':
-	aperture = float(config.get('settings', 'aperture'))
+	aperture = float(config.get('Harmonic potential', 'aperture'))
 	potential = wp.harmonic_potential(x, aperture)
 if potential_type == 'delta':
-	alpha = float(config.get('settings', 'alpha'))
+	alpha = float(config.get('Delta potential', 'alpha'))
 	potential = wp.barrier_potential(x, dx, alpha)
 
 

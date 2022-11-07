@@ -8,15 +8,15 @@ from pathlib import Path
 config = configparser.ConfigParser()
 config.read('config.txt')
 
-potential = config.get('settings', 'potential_type')
-freq = int(config.get('settings', 'play_speed'))
+potential = config.get('Potential profile type', 'potential_type')
+freq = int(config.get('Animation play speed', 'play_speed'))
 
-filepath_1 = config.get('paths', 'potential')
-filepath_2 = config.get('paths', 'probability')
-filepath_3 = config.get('paths', 'transform_probability')
-filepath_4 = config.get('paths', 'statistics')
+filepath_1 = config.get('Paths to files', 'potential')
+filepath_2 = config.get('Paths to files', 'probability')
+filepath_3 = config.get('Paths to files', 'transform_probability')
+filepath_4 = config.get('Paths to files', 'statistics')
 
-filepath_5 = config.get('paths', 'animation')
+filepath_5 = config.get('Paths to files', 'animation')
 
 
 # load data to plot
@@ -53,7 +53,7 @@ y_lim =  1.1 * np.max(psi_2[:, 0])
 
 # rescale barrier potential to fit in the figure
 if potential == 'barrier':
-    h = float(config.get('settings', 'height'))
+    h = float(config.get('Barrier potential', 'height'))
     if h < 0:
         pot = 0.8 * y_lim * pot / abs(h) + 0.85 * y_lim
     else:
@@ -61,7 +61,7 @@ if potential == 'barrier':
 
 # rescale harmonic potential to fit in the figure
 if potential == 'harmonic':
-    a = float(config.get('settings', 'aperture'))
+    a = float(config.get('Harmonic potential', 'aperture'))
     y_lim = 1.1 * np.max(psi_2)
     pot *= 2 * y_lim / abs(a)
 
