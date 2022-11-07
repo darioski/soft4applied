@@ -109,7 +109,18 @@ def barrier_potential(x, half_width, height):
 
 
 def harmonic_potential(x, a):
-    # centered harmonic potential
+    '''
+    Return a centered harmonic potential.
+
+    Parameters
+    ----------
+    x : 1d array, the real space
+    a : float, aperture of the parabola 
+
+    Returns
+    -------
+    1d array, the harmonic potential profile
+    '''
     n = len(x)
     return a * (x - x[n//2]) ** 2
 

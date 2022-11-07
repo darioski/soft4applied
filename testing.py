@@ -530,3 +530,19 @@ def test_barrier_potential_is_symmetric():
     potential = wp.barrier_potential(x, 0.2, 100)
 
     assert np.all(potential == potential[::-1])
+
+
+def test_harmonic_potential_is_symmetric():
+    '''
+    Test if the function harmonic_potential returns a symmetric potential.
+
+    GIVEN: the real space x
+    WHEN: I define a harmonic potential on it using the function harmonic_potential
+    THEN: the potential array must be symmetric.
+    '''
+    n = 1001
+    x = np.linspace(0, 1, n, endpoint=False)
+
+    potential = wp.harmonic_potential(x, 1e6)
+
+    assert np.all(np.isclose(potential, potential[::-1]))
