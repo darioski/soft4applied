@@ -125,7 +125,7 @@ def harmonic_potential(x, a):
     return a * (x - x[n//2]) ** 2
 
 
-def x_stats(psi_2, x):
+def x_stats(probability, x):
     '''
     Compute statistical quantities in the real space.
 
@@ -142,16 +142,17 @@ def x_stats(psi_2, x):
     '''
 
     n = len(x)
-    m = psi_2.shape[1] - 1
+    m = probability.shape[1] - 1
     p_left = np.empty(m+1)
     x_mean = np.empty(m+1)
     x_rms = np.empty(m+1)
 
     for j in range(m+1):
-        p_left[j] = 0.5 * np.mean(psi_2[:n//2, j])
-        x_mean[j] = np.mean(x * psi_2[:, j])
-        # rms(x) ** 2 = < x ** 2 > - < x > ** 2
-        x2_m = np.mean(x ** 2 * psi_2[:, j])
+        p_left[j] = 0.5 * np.mean(probability[:n//2, j])
+        x_mean[j] = np.mean(x * probability[:, j])
+        # avg(x**2)
+        x2_m = np.mean(x ** 2 * probability[:, j])
+        # rms(x)**2 = avg(x**2) - avg(x)**2
         x_rms[j] = np.sqrt(x2_m - x_mean[j] ** 2)
     return p_left, x_mean, x_rms
 

@@ -568,3 +568,46 @@ def test_harmonic_potential_is_symmetric():
     potential = wp.harmonic_potential(x, 1e6)
 
     assert np.all(np.isclose(potential, potential[::-1]))
+
+
+# stats 
+
+def test_x_stats_of_equidistributed_probability():
+    '''
+    '''
+
+    n = 1001
+    m = 100
+    x = np.linspace(0, 1, n, endpoint=False)
+
+    probability = np.ones((n, m+1))
+
+    p_left, x_mean, x_rms = wp.x_stats(probability, x)
+
+    assert np.all(np.isclose(p_left, 0.5, atol=1e-2))
+    assert np.all(np.isclose(x_mean, x[n//2]))
+    assert np.all(np.isclose(x_rms, np.sqrt(1/12)))
+
+
+def test_x_stats_of_gaussian_distribution():
+    '''
+    '''
+    # set initial state
+    n = 10001
+    m =100
+    x = np.linspace(0, 1, n, endpoint=False)
+    start_position = x[n//2]
+    sigma = 0.01
+    start_momentum = 0
+    wavefunction = np.empty((n, m+1), dtype=complex)
+    wavefunction[:, 0] = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)   
+    for j in range(m):
+        wavefunction[:, j+1] = wavefunction[:, 0]
+
+    probability = np.abs(wavefunction) ** 2
+
+    p_left, x_mean, x_rms = wp.x_stats(probability, x)
+
+    assert np.all(np.isclose(p_left, 0.5, atol=1e-2))
+    assert np.all(np.isclose(x_mean, x[n//2]))
+    assert np.all(np.isclose(x_rms, sigma))
