@@ -12,23 +12,30 @@ with matrices. For details, see [Code implementation](./INFO/IMPL.md).
 
 
 ## Usage
-1. Edit the input file _./params.py_ and choose the value of the desired parameters. See [List of input parameters](./INFO/PARAMS.md).
+1. Edit the input _.txt_ file and choose the value of the desired parameters. See [List of input parameters](./INFO/PARAMS.md).
 
 2. After the input file has been edited, run the simulation with the command
 ```
-python ./run.py
+python run.py <configuration_file>
 ```
 The script returns three binary files in the _.npy_ format, where the two _Nx(M+1)_ NumPy arrays and the potential profile array are stored. 
 It also returns a _.csv_ file with the statistics computed for each step of the simulation.
 
 
-3. To visualize the simulation, run the script _./animation.py_ with the command
+3. To visualize the simulation, run the script _animation.py_ with the command
 ```
-python ./animation.py
+python animation.py
 ```
-If you want to save the animation, specify the format in the input file _./params.py_.
+If you want to save the animation, specify the format in the configuration file.
 
-**Warning:** If you want to save the animation as _.mp4_, you may need the package _ffmpeg_.
+## Requirements
+The program uses the following additional libraries:
+
+* [NumPy](https://numpy.org/)
+* [Pandas](https://pandas.pydata.org/)
+* [Matplotlib](https://matplotlib.org/)
+
+**Note:** If you want to save the animation as _.mp4_, you may need the package _ffmpeg_.
 If this is the case, install it by running on your terminal the command `conda install ffmpeg`.
 
 ## Examples
