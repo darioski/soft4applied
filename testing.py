@@ -625,3 +625,39 @@ def test_x_stats_of_gaussian_distribution():
     assert np.all(np.isclose(p_left, 0.5, atol=1e-2))
     assert np.all(np.isclose(x_mean, x[n//2]))
     assert np.all(np.isclose(x_rms, sigma))
+
+
+def test_k_stats_of_gaussian_distribution():
+    '''
+    Test statistical quantities for a gaussian distribution fft.
+
+    GIVEN: a gaussian distribution with group velocity =-1000 and its fft
+    WHEN: I compute statistical quantities of the fft using the function k_stats
+    THEN: - the probability for k < 0 must be = 1
+          - average momentum must be equal to group velocity
+          - standard deviation must be = 1 / (2 * sigma)   
+    '''
+    # set initial state
+    n = 10001
+    m =100
+    x = np.linspace(0, 1, n, endpoint=False)
+    k = 2 * np.pi * np.fft.fftfreq(n, d=1/n)
+    start_position = x[n//2]
+    sigma = 0.01
+    start_momentum = -1000
+    wavefunction = np.empty((n, m+1), dtype=complex)
+    wavefunction_transform = np.empty((n, m+1), dtype=complex)
+    wavefunction[:, 0] = wp.gaussian_initial_state(x, start_position, sigma, start_momentum)   
+    wavefunction_transform[:, 0] = np.fft.fft(wavefunction[:, 0])
+
+    for j in range(m):
+        wavefunction[:, j+1] = wavefunction[:, 0]
+        wavefunction_transform[:, j+1] = wavefunction_transform[:, 0]
+
+    transform_probability = 1 / (2 * np.pi * n**2) * np.abs(wavefunction_transform) ** 2
+
+    pk_left, k_mean, k_rms = wp.k_stats(transform_probability, k)
+
+    assert np.all(np.isclose(pk_left, 1))
+    assert np.all(np.isclose(k_mean, start_momentum))
+    assert np.all(np.isclose(k_rms, 1 / (2 * sigma)))

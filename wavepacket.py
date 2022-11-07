@@ -158,13 +158,13 @@ def x_stats(probability, x):
 
     
 
-def k_stats(phi_2, k):
+def k_stats(transform_probability, k):
     '''
     Compute statistical quantities in the reciprocal space.
 
     Parameters
     ----------
-    phi_2 : 2d array, probability density function in reciprocal space.
+    transform_probability : 2d array, probability density function in reciprocal space.
     k : 1d array, the reciprocal space.
 
     Returns
@@ -175,14 +175,14 @@ def k_stats(phi_2, k):
     '''
 
     n = len(k)
-    m = phi_2.shape[1] - 1
+    m = transform_probability.shape[1] - 1
     pk_left = np.empty(m+1)
     k_mean = np.empty(m+1)
     k_rms = np.empty(m+1)  
 
     for j in range(m+1):
-        pk_left[j] = 0.5 * np.sum(phi_2[n//2:, j]) * 2 * np.pi
-        k_mean[j] = np.sum(k * phi_2[:, j]) * 2 * np.pi
-        k2_m = np.sum(k ** 2 * phi_2[:, j]) * 2 * np.pi
+        pk_left[j] = np.sum(transform_probability[n//2:, j]) * 2 * np.pi
+        k_mean[j] = np.sum(k * transform_probability[:, j]) * 2 * np.pi
+        k2_m = np.sum(k ** 2 * transform_probability[:, j]) * 2 * np.pi
         k_rms[j] = np.sqrt(k2_m - k_mean[j] ** 2)
     return pk_left, k_mean, k_rms
