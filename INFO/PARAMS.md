@@ -4,8 +4,10 @@ All quantities are expressed in atomic units.
 ## Simulation settings
 
 * **t _(float)_** _ : Simulation time. 
-* **dt _(float)_** _ : Time-step length. 
-* **dx _(float)_** _ : Spacial precision. 
+* **dt _(float)_** _ : Time-step length. It shouldn't be smaller than $10^{-6}$.
+* **dx _(float)_** _ : Spacial precision. It shouldn't be smaller than $10^{-3}$. 
+                       As a rule of thumb **dt** should be at least $1000$ times 
+                       smaller than **dx**
 
 ## Initial state settings
 
